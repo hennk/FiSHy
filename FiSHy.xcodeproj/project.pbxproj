@@ -1,0 +1,586 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		D4423DD90B84AE2B0039DCB9 /* FiSHBlowfish.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4423DD80B84AE2B0039DCB9 /* FiSHBlowfish.mm */; };
+		D4423E190B84B8630039DCB9 /* fish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4D8D8930B824922000FA9F8 /* fish.cpp */; };
+		D4423E1A0B84B8630039DCB9 /* dh1080.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4D8D8980B824922000FA9F8 /* dh1080.cpp */; };
+		D4423E1E0B84B88C0039DCB9 /* libssl.0.9.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D47767270B83F74D0099B4B8 /* libssl.0.9.7.dylib */; };
+		D4423E1F0B84B88C0039DCB9 /* libcrypto.0.9.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */; };
+		D4423EA00B84BDFA0039DCB9 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4D8D8970B824922000FA9F8 /* misc.cpp */; };
+		D45D049A0B7E3EBA001DF87B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D45D04650B7E3EB1001DF87B /* Security.framework */; };
+		D45D05150B7EFA20001DF87B /* FiSHController.m in Sources */ = {isa = PBXBuildFile; fileRef = D45D05140B7EFA20001DF87B /* FiSHController.m */; };
+		D45D05180B7EFA76001DF87B /* FiSHSecretStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D45D05170B7EFA76001DF87B /* FiSHSecretStore.m */; };
+		D45D051B0B7EFAAC001DF87B /* FiSHKeyExchanger.mm in Sources */ = {isa = PBXBuildFile; fileRef = D45D051A0B7EFAAC001DF87B /* FiSHKeyExchanger.mm */; };
+		D496F3DB0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */; };
+		D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */; };
+		D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D4AFB98C0B8A09740086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
+			remoteInfo = "Colloquy (Application)";
+		};
+		D4AFB98E0B8A09740086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
+			remoteInfo = "Standard Commands (Plug-In)";
+		};
+		D4AFB9900B8A09740086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBF685150820186F00F498FB;
+			remoteInfo = "Colloquy (Metadata Importer)";
+		};
+		D4AFB9920B8A09740086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C7A60B709FDE8560029AC64;
+			remoteInfo = "Colloquy Tests";
+		};
+		D4AFB9990B8A09800086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04370B7E3DCF001DF87B /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		D4AFB9E90B8A0B8B0086B38A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CB2CCF5052DDC560094AAA4;
+			remoteInfo = "Colloquy (Application)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		32DBCF630370AF2F00C91783 /* FiSHy_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHy_Prefix.pch; sourceTree = "<group>"; };
+		8D5B49B6048680CD000E48DA /* FiSHy.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FiSHy.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		D4423DD70B84AE2B0039DCB9 /* FiSHBlowfish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHBlowfish.h; sourceTree = "<group>"; };
+		D4423DD80B84AE2B0039DCB9 /* FiSHBlowfish.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FiSHBlowfish.mm; sourceTree = "<group>"; };
+		D4423E020B84B7DF0039DCB9 /* SHA256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SHA256.c; sourceTree = "<group>"; };
+		D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Colloquy.xcodeproj; path = ../colloquy/Colloquy.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D45D04370B7E3DCF001DF87B /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Chat Core.xcodeproj"; path = "../colloquy/Chat Core.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		D45D04630B7E3E95001DF87B /* miracl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = miracl.a; path = MIRACL/miracl.a; sourceTree = "<group>"; };
+		D45D04650B7E3EB1001DF87B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		D45D05130B7EFA20001DF87B /* FiSHController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHController.h; sourceTree = "<group>"; };
+		D45D05140B7EFA20001DF87B /* FiSHController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHController.m; sourceTree = "<group>"; };
+		D45D05160B7EFA76001DF87B /* FiSHSecretStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHSecretStore.h; sourceTree = "<group>"; };
+		D45D05170B7EFA76001DF87B /* FiSHSecretStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHSecretStore.m; sourceTree = "<group>"; };
+		D45D05190B7EFAAC001DF87B /* FiSHKeyExchanger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHKeyExchanger.h; sourceTree = "<group>"; };
+		D45D051A0B7EFAAC001DF87B /* FiSHKeyExchanger.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FiSHKeyExchanger.mm; sourceTree = "<group>"; };
+		D47767270B83F74D0099B4B8 /* libssl.0.9.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.0.9.7.dylib; path = /usr/lib/libssl.0.9.7.dylib; sourceTree = "<absolute>"; };
+		D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.7.dylib; path = /usr/lib/libcrypto.0.9.7.dylib; sourceTree = "<absolute>"; };
+		D496F3D90B80BDB50015B1F2 /* NSString+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FiSHyExtensions.h"; sourceTree = "<group>"; };
+		D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FiSHyExtensions.m"; sourceTree = "<group>"; };
+		D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FiSHyExtensions.h"; sourceTree = "<group>"; };
+		D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FiSHyExtensions.m"; sourceTree = "<group>"; };
+		D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		D4D8D8930B824922000FA9F8 /* fish.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = fish.cpp; sourceTree = "<group>"; };
+		D4D8D8940B824922000FA9F8 /* fish.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fish.h; sourceTree = "<group>"; };
+		D4D8D8950B824922000FA9F8 /* dh1080.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dh1080.h; sourceTree = "<group>"; };
+		D4D8D8960B824922000FA9F8 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
+		D4D8D8970B824922000FA9F8 /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = "<group>"; };
+		D4D8D8980B824922000FA9F8 /* dh1080.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dh1080.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4423E1E0B84B88C0039DCB9 /* libssl.0.9.7.dylib in Frameworks */,
+				D4423E1F0B84B88C0039DCB9 /* libcrypto.0.9.7.dylib in Frameworks */,
+				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
+				D45D049A0B7E3EBA001DF87B /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* FiSHy */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* Other Sources */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+				D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */,
+				D45D04370B7E3DCF001DF87B /* Chat Core.xcodeproj */,
+			);
+			name = FiSHy;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+				D45D04630B7E3E95001DF87B /* miracl.a */,
+				D47767270B83F74D0099B4B8 /* libssl.0.9.7.dylib */,
+				D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */,
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D45D05130B7EFA20001DF87B /* FiSHController.h */,
+				D45D05140B7EFA20001DF87B /* FiSHController.m */,
+				D4423DD70B84AE2B0039DCB9 /* FiSHBlowfish.h */,
+				D4423DD80B84AE2B0039DCB9 /* FiSHBlowfish.mm */,
+				D45D05160B7EFA76001DF87B /* FiSHSecretStore.h */,
+				D45D05170B7EFA76001DF87B /* FiSHSecretStore.m */,
+				D45D05190B7EFAAC001DF87B /* FiSHKeyExchanger.h */,
+				D45D051A0B7EFAAC001DF87B /* FiSHKeyExchanger.mm */,
+				D496F3D90B80BDB50015B1F2 /* NSString+FiSHyExtensions.h */,
+				D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */,
+				D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */,
+				D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+				D45D04650B7E3EB1001DF87B /* Security.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+				D2F7E65807B2D6F200F64583 /* CoreData.framework */,
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* FiSHy.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D4D8D8850B8248C0000FA9F8 /* Dirt */,
+				32DBCF630370AF2F00C91783 /* FiSHy_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		D4AFB9860B8A09740086B38A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4AFB98D0B8A09740086B38A /* Colloquy.app */,
+				D4AFB98F0B8A09740086B38A /* Standard Commands.plugin */,
+				D4AFB9910B8A09740086B38A /* Colloquy.mdimporter */,
+				D4AFB9930B8A09740086B38A /* Colloquy Tests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D4AFB9960B8A09800086B38A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4AFB99A0B8A09800086B38A /* ChatCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D4D8D8850B8248C0000FA9F8 /* Dirt */ = {
+			isa = PBXGroup;
+			children = (
+				D4D8D8940B824922000FA9F8 /* fish.h */,
+				D4D8D8930B824922000FA9F8 /* fish.cpp */,
+				D4D8D8950B824922000FA9F8 /* dh1080.h */,
+				D4D8D8980B824922000FA9F8 /* dh1080.cpp */,
+				D4D8D8960B824922000FA9F8 /* misc.h */,
+				D4D8D8970B824922000FA9F8 /* misc.cpp */,
+				D4423E020B84B7DF0039DCB9 /* SHA256.c */,
+			);
+			path = Dirt;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* FiSHy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "FiSHy" */;
+			buildPhases = (
+				8D5B49AF048680CD000E48DA /* Resources */,
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
+				D4AA134C0B812B8D00558C3A /* Set LS Version */,
+				D4AA13600B812D3F00558C3A /* Remove Headers */,
+				D4AA13620B812D7D00558C3A /* Set SVN Revision */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4AFB9EA0B8A0B8B0086B38A /* PBXTargetDependency */,
+			);
+			name = FiSHy;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = FiSHy;
+			productReference = 8D5B49B6048680CD000E48DA /* FiSHy.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "FiSHy" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* FiSHy */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D4AFB9960B8A09800086B38A /* Products */;
+					ProjectRef = D45D04370B7E3DCF001DF87B /* Chat Core.xcodeproj */;
+				},
+				{
+					ProductGroup = D4AFB9860B8A09740086B38A /* Products */;
+					ProjectRef = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
+				},
+			);
+			targets = (
+				8D5B49AC048680CD000E48DA /* FiSHy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D4AFB98D0B8A09740086B38A /* Colloquy.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Colloquy.app;
+			remoteRef = D4AFB98C0B8A09740086B38A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4AFB98F0B8A09740086B38A /* Standard Commands.plugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Standard Commands.plugin";
+			remoteRef = D4AFB98E0B8A09740086B38A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4AFB9910B8A09740086B38A /* Colloquy.mdimporter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Colloquy.mdimporter;
+			remoteRef = D4AFB9900B8A09740086B38A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4AFB9930B8A09740086B38A /* Colloquy Tests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Colloquy Tests.octest";
+			remoteRef = D4AFB9920B8A09740086B38A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4AFB99A0B8A09800086B38A /* ChatCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChatCore.framework;
+			remoteRef = D4AFB9990B8A09800086B38A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D5B49AF048680CD000E48DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
+				D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D4AA134C0B812B8D00558C3A /* Set LS Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set LS Version";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/ruby;
+			shellScript = "#! /usr/bin/ruby\n# \n# human_version_to_cfbundle_version.rb 1.0d1 (or 01000.00.01 ;-)\n#   Based on <http://www.dribin.org/dave/blog/archives/2006/08/02/versioning_os_x_apps/>\n#   Copyright (c) 2006 Jonathan 'Wolf' Rentzsch.\n#   Some rights reserved: <http://creativecommons.org/licenses/by/2.0/>\n#   Changes by Henning Kiel to make it work inside XCode Shell Phases by looking for an APPLICATION_VERSION variable, and\n#     replacing the computed value into the CFBundleVersion.\n#\n# A tool that generates CFVersionNumber+Launch Services-happy version numbers given a human version number.\n# For example, 1.2.3b4 => becomes 01020.32.04.\n# All information is encoded -- no information is lost. It's thus reversible, which this tool also does.\n\nclass VersionNumber\n  DEVELOPMENT = 'd'\n  ALPHA = 'a'\n  BETA = 'b'\n  FINAL_CANDIDATE = 'fc'\n  FINAL = ''\n  CFBUNDLEVERSION_MAP = {DEVELOPMENT=>0,ALPHA=>1,BETA=>2,FINAL_CANDIDATE=>3,FINAL=>9}\n  def initialize(version_string)\n    # First try to match CFBundleVersion's format ('01031.08.04').\n    m = version_string.strip.match(/^(\\d\\d)(\\d\\d)(\\d\\.\\d)([01239])\\.(\\d\\d)$/)\n    if m.nil?\n      # Nope, try human-style ('1.3.10b4').\n      # Man, where's RCR 237 (Named capture) when I need it?\n      m = version_string.gsub(/\\s/,'').match(/^(\\d{1,2})(\\.(\\d{1,2}))?(\\.(\\d{1,2}))?((d|a|b|fc)(\\d{1,2}))?$/)\n      raise ArgumentError, \"can't parse '#{version_string}'\" if m.nil?\n      @major = $1.to_i\n      @minor = $3.to_i\n      @bug = $5.to_i\n      if $7.nil?\n        @stage = FINAL\n        @stageNum = 0\n      else\n        @stage = $7 # Kept as a string.\n        @stageNum = $8.to_i\n      end\n      @original_version_string_was_human = true\n    else\n      @major = $1.to_i\n      @minor = $2.to_i\n      @bug = $3.delete('.').to_i\n      @stage = CFBUNDLEVERSION_MAP.invert[$4.to_i]\n      @stageNum = $5.to_i\n      @original_version_string_was_human = false\n    end\n  end\n  def human_version\n    result = \"#{@major}.#{@minor}\"\n    result += \".#{@bug}\" if @bug != 0\n    result += \"#{@stage}\"+\"#{@stageNum}\" if @stage != FINAL\n    result\n  end\n  alias to_s human_version\n  def cfbundle_version\n    result = sprintf('%02d%02d%02d%s.%02d',\n      @major.to_i,\n      @minor.to_i,\n      @bug.to_i,\n      CFBUNDLEVERSION_MAP[@stage],\n      @stageNum.to_i)\n    result.insert(5,'.') # Weird placement for the first decimal: it lands in the middle of the 2-digit bug number.\n  end\n  def other_version\n    @original_version_string_was_human ? cfbundle_version : human_version\n  end\nend\n\nif ENV['APPLICATION_VERSION']\n  lsVersionNumber = VersionNumber.new(ENV['APPLICATION_VERSION']).other_version\n  infoFilePath = ENV['BUILT_PRODUCTS_DIR']+'/'+ENV['WRAPPER_NAME']+'/Contents/Info.plist'\n  infoLineArray = IO.readlines(infoFilePath)\n  info = infoLineArray.join(\"\")\n  newInfo = info.sub(/([\\t ]+<key>CFBundleVersion<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/, '\\1' + lsVersionNumber + '\\2')\n  infoFile = File.open(infoFilePath, 'w')\n  infoFile.puts(newInfo)\n  infoFile.close\nelse\n  puts 'Must be run from Xcode'\nend\n";
+		};
+		D4AA13600B812D3F00558C3A /* Remove Headers */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Remove Headers";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n### We only run on \"Release\" builds...\nif [[ $BUILD_STYLE != 'Release' ]] ; then\n\texit 0\nfi\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -path '*/Headers/*' -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type d -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type l -delete";
+		};
+		D4AA13620B812D7D00558C3A /* Set SVN Revision */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set SVN Revision";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/usr/bin/perl -w";
+			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n        \nuse strict;\n        \ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `/sw/bin/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D45D05150B7EFA20001DF87B /* FiSHController.m in Sources */,
+				D45D05180B7EFA76001DF87B /* FiSHSecretStore.m in Sources */,
+				D45D051B0B7EFAAC001DF87B /* FiSHKeyExchanger.mm in Sources */,
+				D496F3DB0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m in Sources */,
+				D4423DD90B84AE2B0039DCB9 /* FiSHBlowfish.mm in Sources */,
+				D4423E190B84B8630039DCB9 /* fish.cpp in Sources */,
+				D4423E1A0B84B8630039DCB9 /* dh1080.cpp in Sources */,
+				D4423EA00B84BDFA0039DCB9 /* misc.cpp in Sources */,
+				D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D4AFB9EA0B8A0B8B0086B38A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Colloquy (Application)";
+			targetProxy = D4AFB9E90B8A0B8B0086B38A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C167EFE841241C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB913B08733D840010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FiSHy_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				PRODUCT_NAME = FiSHy;
+				WRAPPER_EXTENSION = bundle;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		1DEB913C08733D840010E9CD /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				DEPLOYMENT_LOCATION = NO;
+				DSTROOT = /tmp/FiSHy.dst;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FiSHy_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				PRODUCT_NAME = FiSHy;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = "Release (Universal)";
+		};
+		1DEB913F08733D840010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_VERSION = 0.2.0a1;
+				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${COLLOQUY_SOURCE_FOLDER}/**",
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
+			};
+			name = Development;
+		};
+		1DEB914008733D840010E9CD /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_VERSION = 0.2.0a1;
+				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${COLLOQUY_SOURCE_FOLDER}/**",
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
+			};
+			name = "Release (Universal)";
+		};
+		D496F46C0B80D2D00015B1F2 /* Development (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FiSHy_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				PRODUCT_NAME = FiSHy;
+				WRAPPER_EXTENSION = bundle;
+				ZERO_LINK = NO;
+			};
+			name = "Development (Universal)";
+		};
+		D496F46F0B80D2D00015B1F2 /* Development (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_VERSION = 0.2.0a1;
+				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${COLLOQUY_SOURCE_FOLDER}/**",
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
+			};
+			name = "Development (Universal)";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "FiSHy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB913B08733D840010E9CD /* Development */,
+				D496F46C0B80D2D00015B1F2 /* Development (Universal) */,
+				1DEB913C08733D840010E9CD /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "FiSHy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB913F08733D840010E9CD /* Development */,
+				D496F46F0B80D2D00015B1F2 /* Development (Universal) */,
+				1DEB914008733D840010E9CD /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
