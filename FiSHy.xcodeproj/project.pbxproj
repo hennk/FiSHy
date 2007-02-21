@@ -83,7 +83,6 @@
 		D4423E020B84B7DF0039DCB9 /* SHA256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SHA256.c; sourceTree = "<group>"; };
 		D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Colloquy.xcodeproj; path = ../colloquy/Colloquy.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D45D04370B7E3DCF001DF87B /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Chat Core.xcodeproj"; path = "../colloquy/Chat Core.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		D45D04630B7E3E95001DF87B /* miracl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = miracl.a; path = MIRACL/miracl.a; sourceTree = "<group>"; };
 		D45D04650B7E3EB1001DF87B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		D45D05130B7EFA20001DF87B /* FiSHController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHController.h; sourceTree = "<group>"; };
 		D45D05140B7EFA20001DF87B /* FiSHController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHController.m; sourceTree = "<group>"; };
@@ -140,7 +139,6 @@
 			children = (
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
-				D45D04630B7E3E95001DF87B /* miracl.a */,
 				D47767270B83F74D0099B4B8 /* libssl.0.9.7.dylib */,
 				D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */,
 			);
