@@ -17,7 +17,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Chat Core/MVChatPluginManager.h"
-#import "Chat Core/MVIRCChatConnection.h"
 
 #import "FiSHKeyExchanger.h";
 
@@ -25,10 +24,7 @@
 
 
 /// Central controller. Reacts to incoming and outgoing messages, and uses the other classes to encrypt/decrypt these.
-/**
-   Conforms also to: MVIRCChatConnectionPlugin (not explicitly, as importing the necessary header file gives errors)
- */
-@interface FiSHController : NSObject <MVChatPlugin, MVIRCChatConnectionPlugin, FiSHKeyExchangerDelegate>
+@interface FiSHController : NSObject <MVChatPlugin, FiSHKeyExchangerDelegate>
 {
    FiSHKeyExchanger *keyExchanger_;
    FiSHBlowfish *blowFisher_;
