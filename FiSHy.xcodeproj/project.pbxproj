@@ -103,6 +103,8 @@
 		D4D8D8960B824922000FA9F8 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
 		D4D8D8970B824922000FA9F8 /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = "<group>"; };
 		D4D8D8980B824922000FA9F8 /* dh1080.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dh1080.cpp; sourceTree = "<group>"; };
+		D4E281520B8D06330095A792 /* buildDMG.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = buildDMG.pl; sourceTree = "<group>"; };
+		D4E2816C0B8D0E0F0095A792 /* READ ME.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "READ ME.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
+				D4E2814B0B8D06180095A792 /* Build Tools */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 				D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */,
@@ -148,6 +151,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D4E2816C0B8D0E0F0095A792 /* READ ME.rtf */,
 				D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
@@ -243,6 +247,14 @@
 			path = Dirt;
 			sourceTree = "<group>";
 		};
+		D4E2814B0B8D06180095A792 /* Build Tools */ = {
+			isa = PBXGroup;
+			children = (
+				D4E281520B8D06330095A792 /* buildDMG.pl */,
+			);
+			name = "Build Tools";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -256,6 +268,7 @@
 				D4AA134C0B812B8D00558C3A /* Set LS Version */,
 				D4AA13600B812D3F00558C3A /* Remove Headers */,
 				D4AA13620B812D7D00558C3A /* Set SVN Revision */,
+				D4E281530B8D06690095A792 /* Make Disk Image */,
 			);
 			buildRules = (
 			);
@@ -370,7 +383,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n### We only run on \"Release\" builds...\nif [[ $BUILD_STYLE != 'Release' ]] ; then\n\texit 0\nfi\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -path '*/Headers/*' -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type d -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type l -delete";
+			shellScript = "#!/bin/sh\n### We only run on \"Release\" builds...\nif [[ $BUILD_STYLE != 'Release (Universal)' ]] ; then\n\texit 0\nfi\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -path '*/Headers/*' -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type d -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type l -delete";
 		};
 		D4AA13620B812D7D00558C3A /* Set SVN Revision */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -385,6 +398,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
 			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n        \nuse strict;\n        \ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `/sw/bin/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+		};
+		D4E281530B8D06690095A792 /* Make Disk Image */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}",
+			);
+			name = "Make Disk Image";
+			outputPaths = (
+				"${$HOME}/Desktop/${PRODUCT_NAME}-${APPLICATION_VERSION}.dmg",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ $BUILD_STYLE != \"Release (Universal)\" ]]; then\n\texit\nfi\n$PROJECT_DIR/buildDMG.pl -dmgName \"$PRODUCT_NAME-$APPLICATION_VERSION\".0 \\\n                         -buildDir \"$HOME/Desktop\" \\\n                         -volName \"$PRODUCT_NAME\" \\\n                         -compressionLevel 9 \\\n                         \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \"$PROJECT_DIR/READ ME.rtf\" \"$PROJECT_DIR/LICENSE.txt\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
