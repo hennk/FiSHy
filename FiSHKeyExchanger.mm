@@ -153,8 +153,8 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    NSInvocation *removeOldTempKeyExchangeInfoInvocation = [NSInvocation invocationWithMethodSignature:methodSig];
    [removeOldTempKeyExchangeInfoInvocation setTarget:self];
    [removeOldTempKeyExchangeInfoInvocation setSelector:@selector(removeTemporaryKeyExchangeInfosForNickName:onConnection:)];
-   [removeOldTempKeyExchangeInfoInvocation setArgument:nickname atIndex:2];
-   [removeOldTempKeyExchangeInfoInvocation setArgument:connection atIndex:3];
+   [removeOldTempKeyExchangeInfoInvocation setArgument:&nickname atIndex:2];
+   [removeOldTempKeyExchangeInfoInvocation setArgument:&connection atIndex:3];
    
    // Create the dictionary containing the keypair, and the timer used to delete the key pair if we don't use it during a certain amount of time.
    NSDictionary *keyPair = [NSDictionary dictionaryWithObjectsAndKeys:

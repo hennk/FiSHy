@@ -38,11 +38,11 @@ NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotP
 
 // Postfix of encrypted messages to mark them visibly for the user.
 // TODO: Make this user-configurable.
-NSString *FiSHEncryptedMessageMarker = @" :*";
+NSString *FiSHEncryptedMessageMarker = @":*";
 
 // Prefix of outgoing messages which we should not encrypt.
 // TODO: Make this user-configurable.
-NSString *FiSHNonEncryptingPrefix = @"+p ";
+NSString *FiSHNonEncryptingPrefix = @"+p";
 
 // Command used to trigger an automatic key exchange. Syntax: /keyx [nick]. If no nick is given, the nick from the current query is used.
 NSString *FiSHKeyExchangeCommand = @"keyx";
@@ -103,10 +103,10 @@ NSString *FiSHSetKeyCommand = @"setkey";
 
 #pragma mark MVIRCChatConnectionPlugin
 
-- (void) processIncomingMessageAsData:(NSMutableData *)message from:(MVChatUser *)sender to:(id)receiver isNotice:(BOOL)isNotice;
+- (void) processIncomingMessageAsData:(NSMutableData *) message from:(MVChatUser *) sender to:(id) receiver attributes:(NSMutableDictionary *)msgAttributes;
 {
    // If we received a notice, it is possible, that it's a key exchange request/response. Let the FiSHKeyExchanger decide this.
-   if (isNotice)
+   if ([[msgAttributes objectForKey:@"notice"] boolValue])
    {
       MVChatConnection *theConnection = (MVChatConnection *)[sender connection];
       [urlToConnectionCache_ setObject:theConnection forKey:[[theConnection url] absoluteString]];
@@ -131,42 +131,101 @@ NSString *FiSHSetKeyCommand = @"setkey";
    
    // Try to decrypt the raw encrypted text.
    NSData *decryptedData = nil;
-   [blowFisher_ decodeData:message intoData:&decryptedData key:secret];
-   if (!decryptedData)
-      return;
-   // TODO: Handle cases where decryption was only partially succesfull, and display a corresponding note to the user.
-   
-   [message setData:decryptedData];
+   switch ([blowFisher_ decodeData:message intoData:&decryptedData key:secret])
+   {
+      case FiSHCypherTextCut:
+      case FiSHCypherSuccess:
+         [message setData:decryptedData];
+         [msgAttributes setObject:[NSNumber numberWithInt:FiSHCypherTextCut] forKey:@"FiSHyResult"];
+         [msgAttributes setObject:[NSNumber numberWithBool:YES] forKey:@"decrypted"]; 
+         break;
+      case FiSHCypherBadCharacters:
+      case FiSHCypherUnknownError:
+      case FiSHCypherPlainText:
+         [msgAttributes setObject:[NSNumber numberWithInt:FiSHCypherTextCut] forKey:@"FiSHyResult"];
+         break;
+      default:
+         NSLog(@"Unexpected/unknown blowfish result.");
+   }
 }
 
-- (void) processOutgoingMessageAsData:(NSMutableData *)message to:(id)receiver;
+- (void) processOutgoingMessageAsData:(NSMutableData *) message to:(id) receiver attributes:(NSDictionary *)msgAttributes;
 {
-//   NSString *plaintextBody = [message bodyAsPlainText];
-//   
-//   if ([plaintextBody hasPrefix:FiSHNonEncryptingPrefix])
-//   {
-//      // User override of encryption. Remove the prefix, and transmit the rest of the message unencrypted.
-//      [message setBodyAsPlainText:[plaintextBody substringFromIndex:[FiSHNonEncryptingPrefix length]]];
-//      return;
-//   }
-   
+   if ([[msgAttributes objectForKey:@"sendUnencrypted"] boolValue])
+      return;
+
+   if (![[msgAttributes objectForKey:@"shouldEncrypt"] boolValue])
+      return;
+
    // Check if we have a secret for the current room/nick.
    NSString *accountName = [receiver isKindOfClass:NSClassFromString(@"MVChatRoom")] ? [receiver name] : [receiver nickname];
    // TODO: Handle service/connection correctly.
    NSString *secret = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:accountName];
    if (!secret)
-      return;
+      goto bail;
    
    NSData *encryptedData = nil;
    [blowFisher_ encodeData:message intoData:&encryptedData key:secret];
    // TODO: Handle return value of encodeData.
    if (!encryptedData)
-      return;
+      goto bail;
    
    [message setData:encryptedData];
+   return;
+   
+bail:
+   // If encryption failed for some reason, cancel sending the message, and tell the user.
+   [message setLength:0];
+   
+   JVDirectChatPanel *thePanel = nil;
+   if ([receiver isKindOfClass:NSClassFromString(@"MVChatRoom")])
+      thePanel = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllerForRoom:receiver 
+                                                                                              ifExists:NO];
+   else
+      thePanel = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllerForUser:receiver 
+                                                                                              ifExists:NO
+                                                                                         userInitiated:NO];
+   [thePanel addEventMessageToDisplay:NSLocalizedString(@"Encrypting the message failed. The message was not sent", @"EncryptionFailedInfo") withName:@"EncryptionFailedInfo" andAttributes:nil];
+   
+   return;
 }
 
 #pragma mark MVChatPluginDirectChatSupport
+
+- (void)processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
+{
+   if ([[[message attributes] objectForKey:@"decrypted"] boolValue])
+   {
+      NSTextStorage *body = [message body];
+      [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
+                                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                       [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
+                                                                       nil]
+         ] autorelease]];
+      return;
+   }
+   
+   if ([[[message attributes] objectForKey:@"shouldEncrypt"] boolValue])
+   {
+      NSTextStorage *body = [message body];
+      [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
+                                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                       [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
+                                                                       nil]
+         ] autorelease]];
+      return;
+   }
+}
+
+- (void)processOutgoingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
+{
+   // TODO: Decide here, if a message should be encrypted based on user's preferences for the current room/query.
+   NSMutableDictionary *attributes = [[message attributes] mutableCopy];
+   if (!attributes)
+      attributes = [NSMutableDictionary dictionary];
+   [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
+   [message setAttributes:attributes];
+}
 
 //- (void)processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
 //{
@@ -359,6 +418,24 @@ NSString *FiSHSetKeyCommand = @"setkey";
    return YES;
 }
 
+- (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView;
+{
+   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
+   {
+      NSLog(@"Unexpected view class encountered.");
+      return NO;
+   }
+   // It's now safe to typecast view, to prevent compiler-warnings later.
+   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
+   
+   JVMutableChatMessage *msg = [[[NSClassFromString(@"JVMutableChatMessage") alloc] initWithText:arguments sender:[connection localUser]] autorelease];
+   [msg setAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"]];
+   [view echoSentMessageToDisplay:msg];
+   [view sendMessage:msg];
+   
+   return YES;
+}
+
 #pragma mark MVChatPluginCommandSupport
 
 - (BOOL)processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>)aView;
@@ -379,6 +456,8 @@ NSString *FiSHSetKeyCommand = @"setkey";
       return [self processKeyExchangeCommandWithArguments:arguments toConnection:connection inView:view];
    if ([command isEqualToString:FiSHSetKeyCommand])
       return [self processSetKeyCommandWithArguments:arguments toConnection:connection inView:view];
+   if ([command isEqualToString:FiSHNonEncryptingPrefix])
+      return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inView:view];
    
    return NO;
 }
