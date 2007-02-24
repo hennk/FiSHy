@@ -467,6 +467,18 @@ bail:
    // TODO: Differenciate between services here.
    [encPrefs_ setPreference:encPref forService:nil account:targetName];
    
+   switch (encPref)
+   {
+      case FiSHEncPrefPreferEncrypted:
+         [view addEventMessageToDisplay:NSLocalizedString(@"Encryption is enabled for this room.", @"Encryption is enabled for this room.") withName:@"EncryptionEnabledForRoom" andAttributes:nil];
+         break;
+      case FiSHEncPrefAvoidEncrypted:
+         [view addEventMessageToDisplay:NSLocalizedString(@"Encryption is disabled for this room.", @"Encryption is disabled for this room.") withName:@"EncryptionDisabledForRoom" andAttributes:nil];
+         break;
+      default:
+         break;
+   }
+   
    return YES;
 }
 
