@@ -26,7 +26,7 @@
 
 + (FiSHSecretStore *)sharedSecretStore;
 
-- (void)storeSecret:(NSString *)secret forService:(NSString *)serviceName account:(NSString *)accountName isTemporary:(BOOL)isTemporary;
+- (BOOL)storeSecret:(NSString *)secret forService:(NSString *)serviceName account:(NSString *)accountName isTemporary:(BOOL)isTemporary;
 - (NSString *)secretForService:(NSString *)serviceName account:(NSString *)accountName;
 
 @end

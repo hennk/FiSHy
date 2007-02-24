@@ -21,7 +21,7 @@
 #import "FiSHKeyExchanger.h";
 
 @class FiSHBlowfish;
-
+@class FiSHEncryptionPrefs;
 
 /// Central controller. Reacts to incoming and outgoing messages, and uses the other classes to encrypt/decrypt these.
 @interface FiSHController : NSObject <MVChatPlugin, FiSHKeyExchangerDelegate>
@@ -29,9 +29,8 @@
    FiSHKeyExchanger *keyExchanger_;
    FiSHBlowfish *blowFisher_;
    
-   NSMutableDictionary *chatEncryptionPreferences_;
+   FiSHEncryptionPrefs *encPrefs_;
    
    NSMutableDictionary *urlToConnectionCache_;
 }
-
 @end

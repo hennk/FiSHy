@@ -18,10 +18,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@protocol FiSHKeyExchangerDelegate
-- (void)sendPrivateMessage:(NSString *)message to:(NSString *)receiver on:(id)connection;
-- (void)outputStatusInformation:(NSString *)statusInfo forContext:(NSString *)chatContext on:(id)connection;
-@end
+@protocol FiSHKeyExchangerDelegate;
 
 
 @interface FiSHKeyExchanger : NSObject
@@ -37,4 +34,12 @@
 - (void)requestTemporarySecretFor:(NSString *)nickname onConnection:(id)connection;
 
 - (BOOL)processPrivateMessageAsData:(NSData *)message from:(NSString *)sender on:(id)connection;
+@end
+
+
+@protocol FiSHKeyExchangerDelegate
+- (void)sendPrivateMessage:(NSString *)message to:(NSString *)receiver on:(id)connection;
+- (void)outputStatusInformation:(NSString *)statusInfo forContext:(NSString *)chatContext on:(id)connection;
+// TODO: Call the following for unsuccesfully exchanges, too.
+- (void)keyExchanger:(FiSHKeyExchanger *)keyExchanger finishedKeyExchangeFor:(NSString *)nickname onConnection:(id)connection succesfully:(BOOL)succesfully;
 @end

@@ -21,24 +21,23 @@
 #import "Controllers/JVChatWindowController.h"
 #import "Controllers/JVChatController.h"
 #import "Panels/JVChatRoomPanel.h"
+#import "Panels/JVDirectChatPanel.h"
 #import "Chat Core/MVChatUser.h"
 #import "Chat Core/MVChatConnection.h"
 #import "Models/JVChatTranscript.h"
 
 #import "FiSHSecretStore.h"
 #import "FiSHBlowfish.h"
+#import "FiSHEncryptionPrefs.h"
 #import "NSString+FiSHyExtensions.h"
 
 
 #define FiSHYDummyConnection @"FiSHYDummyConnection"
 
-// Notifications defined in MVChatConnection.m
-//   We define these here manually to avoid importing the implementation of MVChatConnection, as the notifications in its header-file are only extern'ed.
-NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
-
 // Postfix of encrypted messages to mark them visibly for the user.
 // TODO: Make this user-configurable.
-NSString *FiSHEncryptedMessageMarker = @":*";
+#define FiSHEncryptedMessageMarker NSLocalizedString(@"Encrypted message", @"Encrypted message")
+#define FiSHExpectedEncryptionMarker NSLocalizedString(@"Unencrypted message in encrypted room!", @"Unencrypted message in encrypted room!")
 
 // Prefix of outgoing messages which we should not encrypt.
 // TODO: Make this user-configurable.
@@ -48,9 +47,13 @@ NSString *FiSHNonEncryptingPrefix = @"+p";
 NSString *FiSHKeyExchangeCommand = @"keyx";
 // Command used to set a key manually. Syntax: /setkey [#channel/nick] newkey. Contrary to keys from automated key exchange, these will be saved to Keychain. If only one argument is given, will use it as key, and will try to deduce the #channel/nick from current view's target.
 NSString *FiSHSetKeyCommand = @"setkey";
+// Commands to set encryption preference for a chat-room/query
+NSString *FiSHPreferEncCommand = @"enableEnc";
+NSString *FiSHAvoidEncCommand = @"disableEnc";
 
 
 @interface FiSHController (FiSHyPrivate)
+- (void) joinedDirectChat:(JVDirectChatPanel *)directChat;
 @end
 
 
@@ -66,15 +69,22 @@ NSString *FiSHSetKeyCommand = @"setkey";
       urlToConnectionCache_ = [[NSMutableDictionary alloc] init];
       blowFisher_ = [[FiSHBlowfish alloc] init];
       
-      chatEncryptionPreferences_ = [[NSMutableDictionary alloc] init];
+      encPrefs_ = [[FiSHEncryptionPrefs alloc] init];
+      
+      // Add encryption setting notices to rooms and queries already open when we were loaded.
+      NSSet *openChatPanels = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllersKindOfClass:NSClassFromString(@"JVDirectChatPanel")];
+      NSEnumerator *chatPanelsEnum = [openChatPanels objectEnumerator];
+      JVDirectChatPanel *aChatPanel = nil;
+      while ((aChatPanel = [chatPanelsEnum nextObject]))
+      {
+         [self joinedDirectChat:aChatPanel];
+      }
    }
    return self;
 }
 
 - (void)dealloc;
 {
-   [chatEncryptionPreferences_ release];
-   
    [blowFisher_ release];
    [urlToConnectionCache_ release];
    [keyExchanger_ release];
@@ -100,6 +110,17 @@ NSString *FiSHSetKeyCommand = @"setkey";
    [thePanel addEventMessageToDisplay:statusInfo withName:@"KeyExchangeInfo" andAttributes:nil];
 }
 
+- (void)keyExchanger:(FiSHKeyExchanger *)keyExchanger finishedKeyExchangeFor:(NSString *)nickname onConnection:(id)connection succesfully:(BOOL)succesfully;
+{
+   // If the key exchange was succesfull, prefer encryption for that query.
+   if (succesfully)
+   {
+      [self outputStatusInformation:NSLocalizedString(@"Encryption is enabled for this room.", @"Encryption is enabled for this room.") forContext:nickname on:connection];
+
+      // TODO: Handle service correclty.
+      [encPrefs_ setTemporaryPreference:FiSHEncPrefPreferEncrypted forService:nil account:nickname];
+}
+}
 
 #pragma mark MVIRCChatConnectionPlugin
 
@@ -151,24 +172,33 @@ NSString *FiSHSetKeyCommand = @"setkey";
 
 - (void) processOutgoingMessageAsData:(NSMutableData *) message to:(id) receiver attributes:(NSDictionary *)msgAttributes;
 {
+   NSString *errorMessage = nil;
+   
    if ([[msgAttributes objectForKey:@"sendUnencrypted"] boolValue])
       return;
 
    if (![[msgAttributes objectForKey:@"shouldEncrypt"] boolValue])
       return;
 
-   // Check if we have a secret for the current room/nick.
    NSString *accountName = [receiver isKindOfClass:NSClassFromString(@"MVChatRoom")] ? [receiver name] : [receiver nickname];
+   
+   // Check if we have a secret for the current room/nick.
    // TODO: Handle service/connection correctly.
    NSString *secret = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:accountName];
    if (!secret)
+   {
+      errorMessage = NSLocalizedString(@"Encryption is enabled, but you don't have a key. The message was not sent.", @"Encryption is enabled, but you don't have a key. The message was not sent.");
       goto bail;
+   }
    
    NSData *encryptedData = nil;
    [blowFisher_ encodeData:message intoData:&encryptedData key:secret];
    // TODO: Handle return value of encodeData.
    if (!encryptedData)
+   {
+      errorMessage = NSLocalizedString(@"Encrypting the message failed. The message was not sent.", @"Encrypting the message failed. The message was not sent.");
       goto bail;
+   }
    
    [message setData:encryptedData];
    return;
@@ -185,7 +215,7 @@ bail:
       thePanel = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllerForUser:receiver 
                                                                                               ifExists:NO
                                                                                          userInitiated:NO];
-   [thePanel addEventMessageToDisplay:NSLocalizedString(@"Encrypting the message failed. The message was not sent", @"EncryptionFailedInfo") withName:@"EncryptionFailedInfo" andAttributes:nil];
+   [thePanel addEventMessageToDisplay:errorMessage withName:@"EncryptionFailedInfo" andAttributes:nil];
    
    return;
 }
@@ -194,129 +224,93 @@ bail:
 
 - (void)processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
 {
-   if ([[[message attributes] objectForKey:@"decrypted"] boolValue])
+   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSTextStorage *body = [message body];
-      [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
-                                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                       [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
-                                                                       nil]
-         ] autorelease]];
+      NSLog(@"Unexpected view class encountered.");
       return;
    }
-   
-   if ([[[message attributes] objectForKey:@"shouldEncrypt"] boolValue])
+   // It's now safe to typecast view, to prevent compiler-warnings later.
+   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
+
+   NSString *targetName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
+
+   // The following checks for attributes regarding messages from the local user.
+   if ([message senderIsLocalUser])
    {
-      NSTextStorage *body = [message body];
-      [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
-                                                                    attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                       [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
-                                                                       nil]
-         ] autorelease]];
-      return;
+      if ([[[message attributes] objectForKey:@"shouldEncrypt"] boolValue] && [encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefAvoidEncrypted)
+      {
+         NSTextStorage *body = [message body];
+         [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
+                                                                       attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                          [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
+                                                                          nil]
+            ] autorelease]];
+      }
+   } else
+   {
+      // The following checks for attributes regarding messages not from the local user.
+      BOOL decrypted = [[[message attributes] objectForKey:@"decrypted"] boolValue];
+      FiSHEncPrefKey encPref = [encPrefs_ preferenceForService:nil account:targetName];
+      NSString *errorMsg = nil;
+      if (decrypted && encPref == FiSHEncPrefAvoidEncrypted)
+      {
+         errorMsg = FiSHEncryptedMessageMarker;
+      } else if (!decrypted && encPref == FiSHEncPrefPreferEncrypted)
+      {
+         errorMsg = FiSHExpectedEncryptionMarker;
+      }
+      
+      if (errorMsg)
+      {
+         NSTextStorage *body = [message body];
+         [body appendAttributedString:[[[NSAttributedString alloc] initWithString:errorMsg 
+                                                                       attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                          [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses",
+                                                                          nil]
+            ] autorelease]];
+      }
    }
 }
 
 - (void)processOutgoingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
 {
-   // TODO: Decide here, if a message should be encrypted based on user's preferences for the current room/query.
-   NSMutableDictionary *attributes = [[message attributes] mutableCopy];
-   if (!attributes)
-      attributes = [NSMutableDictionary dictionary];
-   [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
-   [message setAttributes:attributes];
+   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
+   {
+      NSLog(@"Unexpected view class encountered.");
+      return;
+   }
+   // It's now safe to typecast view, to prevent compiler-warnings later.
+   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
+
+   NSString *targetName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
+
+   // Check, if the user prefers encryption for this target. If so, mark the message, so that we can encrypt it later.
+   // TODO: Handle service.
+   if ([encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefPreferEncrypted)
+   {
+      NSMutableDictionary *attributes = [[message attributes] mutableCopy];
+      if (!attributes)
+         attributes = [NSMutableDictionary dictionary];
+      [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
+      [message setAttributes:attributes];
+   } else if ([encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefAvoidEncrypted)
+   {
+      NSMutableDictionary *attributes = [[message attributes] mutableCopy];
+      if (!attributes)
+         attributes = [NSMutableDictionary dictionary];
+      [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
+      [message setAttributes:attributes];
+   }
 }
 
-//- (void)processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
-//{
-//   return;
-//   
-//   // Neither JVMutableChatMessage nor the JVChatViewController protocol allow us to get the context of the received message (ie. the corresponding channel/query)
-//   // It seems that most, if not all, views we get here are of a subclass of JVDirectChatPanel, which do allow us to get above context.
-//   // So check first for the correct class-membership before proceeding.
-//   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
-//   {
-//      NSLog(@"Unexpected view class encountered.");
-//      return;
-//   }
-//   // It's now safe to typecast view, to prevent compiler-warnings later.
-//   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
-//   
-//   NSLog(@"processIncomingMessage:%@", [message bodyAsHTML]);
-//
-//   // Get the secret for the current room/nick and connection. If we don't have one, just display the message without changes.
-//   // DEBUG!!! Hardcoded service and account
-//   // We have to differentiate between a message of a query or a chat room, as the method of getting at the account name is named slightly different.
-//   NSString *accountName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
-//   // TODO: Handle service/connection correctly.
-//   NSString *secret = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:accountName];
-//   if (!secret)
-//      return;
-//
-//   // Try to decrypt the raw encrypted text.
-//   NSData *decryptedData = nil;
-//   [blowFisher_ decodeData:[[message bodyAsPlainText] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO] 
-//                    intoData:&decryptedData
-//                         key:secret];
-//   if (!decryptedData)
-//      return;
-//   // TODO: Handle cases where decryption was only partial succesfull, and display a corresponding note to the user.
-//
-//   NSString *decryptedMessage = [[[NSString alloc] initWithData:decryptedData encoding:[view encoding]] autorelease];
-//   // Update the message with the decrypted text, marking it, so the user knows it was encrypted.
-//   [message setBodyAsPlainText:[decryptedMessage stringByAppendingString:FiSHEncryptedMessageMarker]];
-//}
-//
-//- (void)processOutgoingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)aView;
-//{
-//   return;
-//   
-//   // Neither JVMutableChatMessage nor the JVChatViewController protocol allow us to get the context of the received message (ie. the corresponding channel/query)
-//   // It seems that most, if not all, views we get here are of a subclass of JVDirectChatPanel, which do allow us to get above context.
-//   // So check first for the correct class-membership before proceeding.
-//   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
-//   {
-//      NSLog(@"Unexpected view class encountered.");
-//      return;
-//   }
-//   // It's now safe to typecast view, to prevent compiler-warnings later.
-//   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
-//
-//   NSLog(@"processOutgoingMessage:%@", message);
-//   
-//   NSString *plaintextBody = [message bodyAsPlainText];
-//   
-//   if ([plaintextBody hasPrefix:FiSHNonEncryptingPrefix])
-//   {
-//      // User override of encryption. Remove the prefix, and transmit the rest of the message unencrypted.
-//      [message setBodyAsPlainText:[plaintextBody substringFromIndex:[FiSHNonEncryptingPrefix length]]];
-//      return;
-//   }
-//   
-//   // Check if we have a secret for the current room/nick.
-//   NSString *accountName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
-//   // TODO: Handle service/connection correctly.
-//   NSString *secret = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:accountName];
-//   if (!secret)
-//      return;
-//   
-//   NSData *encryptedData = nil;
-//   [blowFisher_ encodeData:[plaintextBody dataUsingEncoding:[view encoding] allowLossyConversion:YES] intoData:&encryptedData key:secret];
-//   // TODO: Handle return value of encodeData.
-//   if (!encryptedData)
-//      return;
-//   
-//   NSString *encryptedMessage = [[[NSString alloc] initWithData:encryptedData encoding:NSASCIIStringEncoding] autorelease];
-//   [message setBodyAsPlainText:encryptedMessage];
-//}
 
+#pragma mark MVChatPluginRoomSupport
 
-//#pragma mark MVChatPluginRoomSupport
-//- (void) joinedRoom:(JVChatRoomPanel *) room;
-//{
-//   NSLog(@"joinedRoom:%@", room);
-//}
-   
+- (void) joinedRoom:(JVChatRoomPanel *) room;
+{
+   [self joinedDirectChat:room];
+}
+
 
 #pragma mark Command handlers
 
@@ -413,7 +407,16 @@ bail:
    
    // Everything's fine, set the key.
    // TODO: Handle service/connection correctly.
-   [[FiSHSecretStore sharedSecretStore] storeSecret:secret forService:nil account:account isTemporary:NO];
+   if (![[FiSHSecretStore sharedSecretStore] storeSecret:secret forService:nil account:account isTemporary:NO])
+   {
+      [view addEventMessageToDisplay:NSLocalizedString(@"Failed to save the key.", @"Failed to save the key.") withName:@"KeySaveError" andAttributes:nil];   
+      return NO;
+   }
+      
+   [view addEventMessageToDisplay:NSLocalizedString(@"Key saved to Keychain.", @"Key saved to Keychain.") withName:@"KeySavedToKeychain" andAttributes:nil];   
+   
+   [encPrefs_ setPreference:FiSHEncPrefPreferEncrypted forService:nil account:account];
+   [view addEventMessageToDisplay:NSLocalizedString(@"Encryption is enabled for this room.", @"Encryption is enabled for this room.") withName:@"EncryptionEnabledForRoom" andAttributes:nil];   
    
    return YES;
 }
@@ -432,6 +435,37 @@ bail:
    [msg setAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"]];
    [view echoSentMessageToDisplay:msg];
    [view sendMessage:msg];
+   
+   return YES;
+}
+
+- (BOOL) processEncryptionPreferenceCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView pref:(FiSHEncPrefKey)encPref;
+{
+   if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
+   {
+      NSLog(@"Unexpected view class encountered.");
+      return NO;
+   }
+   // It's now safe to typecast view, to prevent compiler-warnings later.
+   JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
+   
+   NSArray *argumentList = [[arguments string] FiSH_arguments];
+   NSString *targetName = nil;
+   if ([argumentList count] == 1)
+   {
+      targetName = [argumentList objectAtIndex:0];
+   } else if ([argumentList count] == 0)
+   {
+      targetName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
+   } else
+   {
+      // TODO: Put out notice to user.
+      NSLog(@"Command expects exactly 1 argument");
+      return NO;
+   }
+   
+   // TODO: Differenciate between services here.
+   [encPrefs_ setPreference:encPref forService:nil account:targetName];
    
    return YES;
 }
@@ -458,6 +492,10 @@ bail:
       return [self processSetKeyCommandWithArguments:arguments toConnection:connection inView:view];
    if ([command isEqualToString:FiSHNonEncryptingPrefix])
       return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inView:view];
+   if ([command isEqualToString:FiSHPreferEncCommand])
+      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefPreferEncrypted];
+   if ([command isEqualToString:FiSHAvoidEncCommand])
+      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefAvoidEncrypted];
    
    return NO;
 }
@@ -466,4 +504,20 @@ bail:
 @end
 
 @implementation FiSHController (FiSHyPrivate)
+
+// TODO: implement the following in colloquy
+#pragma mark MVDirectChatSupport (not yet implemented in Colloquy)
+
+// TODO: Move this out of private category when implemented in colloquy.
+- (void) joinedDirectChat:(JVDirectChatPanel *)directChat;
+{
+   JVDirectChatPanel *thePanel = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllerForRoom:[directChat target]
+                                                                                                              ifExists:NO];
+   
+   if ([encPrefs_ preferenceForService:nil account:[[directChat target] name]] == FiSHEncPrefPreferEncrypted)
+      [thePanel addEventMessageToDisplay:NSLocalizedString(@"Encryption is enabled for this room.", @"Encryption is enabled for this room.") withName:@"EncryptionEnabledForRoom" andAttributes:nil];
+   if ([encPrefs_ preferenceForService:nil account:[[directChat target] name]] == FiSHEncPrefAvoidEncrypted)
+      [thePanel addEventMessageToDisplay:NSLocalizedString(@"Encryption is disabled for this room.", @"Encryption is disabled for this room.") withName:@"EncryptionDisabledForRoom" andAttributes:nil];
+}
+
 @end

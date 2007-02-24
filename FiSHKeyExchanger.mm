@@ -77,8 +77,10 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    if (!dhKeyExchanger->generate())
    {
       free(dhKeyExchanger);
-      // TODO: Inform user about this.
-      NSLog(@"Error initiating DH key exchange.");
+
+      [delegate_ outputStatusInformation:NSLocalizedString(@"Unknown error during key exchange.", "Unknown error during key exchange.")
+                              forContext:nickname
+                                      on:connection];
       return;
    }
    
@@ -247,6 +249,8 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    [delegate_ outputStatusInformation:NSLocalizedString(@"Key exchange completed.", "Key exchange completed")
                            forContext:nickname
                                    on:connection];
+
+   [delegate_ keyExchanger:self finishedKeyExchangeFor:nickname onConnection:connection succesfully:YES];
 }
 
 - (void)handleFiSHKeyExchangeResponseFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;
@@ -297,10 +301,12 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    
    // TODO: Handle service/connection correctly.
    [[FiSHSecretStore sharedSecretStore] storeSecret:theSecret forService:nil account:nickname isTemporary:YES];
-
+   
    [delegate_ outputStatusInformation:NSLocalizedString(@"Key exchange completed.", "Key exchange completed")
                            forContext:nickname
                                    on:connection];
+   
+   [delegate_ keyExchanger:self finishedKeyExchangeFor:nickname onConnection:connection succesfully:YES];
 }
 
 

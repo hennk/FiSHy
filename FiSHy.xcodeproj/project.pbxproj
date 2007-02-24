@@ -20,6 +20,7 @@
 		D45D05180B7EFA76001DF87B /* FiSHSecretStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D45D05170B7EFA76001DF87B /* FiSHSecretStore.m */; };
 		D45D051B0B7EFAAC001DF87B /* FiSHKeyExchanger.mm in Sources */ = {isa = PBXBuildFile; fileRef = D45D051A0B7EFAAC001DF87B /* FiSHKeyExchanger.mm */; };
 		D496F3DB0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */; };
+		D4A6B3840B8FB881001816EB /* FiSHEncryptionPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */; };
 		D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */; };
 		D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,8 @@
 		D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.7.dylib; path = /usr/lib/libcrypto.0.9.7.dylib; sourceTree = "<absolute>"; };
 		D496F3D90B80BDB50015B1F2 /* NSString+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FiSHyExtensions.h"; sourceTree = "<group>"; };
 		D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FiSHyExtensions.m"; sourceTree = "<group>"; };
+		D4A6B3820B8FB881001816EB /* FiSHEncryptionPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHEncryptionPrefs.h; sourceTree = "<group>"; };
+		D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHEncryptionPrefs.m; sourceTree = "<group>"; };
 		D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FiSHyExtensions.h"; sourceTree = "<group>"; };
 		D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FiSHyExtensions.m"; sourceTree = "<group>"; };
 		D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 				D45D05170B7EFA76001DF87B /* FiSHSecretStore.m */,
 				D45D05190B7EFAAC001DF87B /* FiSHKeyExchanger.h */,
 				D45D051A0B7EFAAC001DF87B /* FiSHKeyExchanger.mm */,
+				D4A6B3820B8FB881001816EB /* FiSHEncryptionPrefs.h */,
+				D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */,
 				D496F3D90B80BDB50015B1F2 /* NSString+FiSHyExtensions.h */,
 				D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */,
 				D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */,
@@ -431,6 +436,7 @@
 				D4423E1A0B84B8630039DCB9 /* dh1080.cpp in Sources */,
 				D4423EA00B84BDFA0039DCB9 /* misc.cpp in Sources */,
 				D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */,
+				D4A6B3840B8FB881001816EB /* FiSHEncryptionPrefs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

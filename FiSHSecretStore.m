@@ -55,7 +55,7 @@ FiSHSecretStore *sharedSecretStore = nil;
 /**
   If isTemporary is set, the secret won't be saved in the Keychain. Use this for keys from automatic key exchanges in queries, for example.
  */
-- (void)storeSecret:(NSString *)secret forService:(NSString *)serviceName account:(NSString *)accountName isTemporary:(BOOL)isTemporary;
+- (BOOL)storeSecret:(NSString *)secret forService:(NSString *)serviceName account:(NSString *)accountName isTemporary:(BOOL)isTemporary;
 {
    serviceName = [serviceName lowercaseString];
    accountName = [accountName lowercaseString];
@@ -78,7 +78,7 @@ FiSHSecretStore *sharedSecretStore = nil;
       
       [secretsForService setObject:secret forKey:accountName];
       
-      return;
+      return YES;
    } else
    {
       // The secret is not temporary, so delete any prior temporary secrets for this connection/nick
@@ -144,6 +144,8 @@ FiSHSecretStore *sharedSecretStore = nil;
       // Something went wrong looking for/chaning/adding an entry in Keychain, just bail out.
       NSLog(@"Can't access Keychain.");
    }
+   
+   return (status != noErr);
 }
 
 /// Returns the secret used to communicate with accountName on serviceName from the default Keychain, nil if no secret is stored currently.
