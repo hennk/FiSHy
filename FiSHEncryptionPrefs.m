@@ -9,6 +9,10 @@
 #import "FiSHEncryptionPrefs.h"
 
 
+@interface FiSHEncryptionPrefs (FiSHEncryptionPrefs_Private)
+- (void) removeTemporaryPreferenceForService:(NSString *)service account:(NSString *)account;
+@end
+
 @implementation FiSHEncryptionPrefs
 + (void) initialize;
 {
@@ -67,6 +71,9 @@
 
 - (void) setPreference:(FiSHEncPrefKey)pref forService:(NSString *)serviceName account:(NSString *)accountName;
 {
+   // Remove any temporary preference we might have.
+   [self removeTemporaryPreferenceForService:serviceName account:accountName];
+   
    // TODO: Handle service.
    [chatEncryptionPreferences_ setObject:[NSNumber numberWithInt:pref] forKey:accountName];
 }
@@ -81,4 +88,11 @@
 {
 }
 
+@end
+
+@implementation FiSHEncryptionPrefs (FiSHEncryptionPrefs_Private)
+- (void) removeTemporaryPreferenceForService:(NSString *)service account:(NSString *)account;
+{
+   [temporarychatEncryptionPreferences_ removeObjectForKey:account];
+}
 @end
