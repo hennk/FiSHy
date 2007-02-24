@@ -145,7 +145,7 @@ FiSHSecretStore *sharedSecretStore = nil;
       NSLog(@"Can't access Keychain.");
    }
    
-   return (status != noErr);
+   return (status == noErr);
 }
 
 /// Returns the secret used to communicate with accountName on serviceName from the default Keychain, nil if no secret is stored currently.
