@@ -23,6 +23,7 @@
 		D4A6B3840B8FB881001816EB /* FiSHEncryptionPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */; };
 		D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */; };
 		D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4B700740B91F87900E6FF65 /* CHANGELOG.txt */; };
+		D4B702160B9230E400E6FF65 /* FiSHMisc.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B702150B9230E400E6FF65 /* FiSHMisc.m */; };
 		D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */; };
 		D4EF67C10B91CC900018A60E /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D4EF67C00B91CC900018A60E /* DLog.m */; };
 /* End PBXBuildFile section */
@@ -78,7 +79,7 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF630370AF2F00C91783 /* FiSHy_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHy_Prefix.pch; sourceTree = "<group>"; };
-		8D5B49B6048680CD000E48DA /* FiSHy.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FiSHy.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B6048680CD000E48DA /* FiSHy.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FiSHy.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		D4423DD70B84AE2B0039DCB9 /* FiSHBlowfish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHBlowfish.h; sourceTree = "<group>"; };
@@ -102,6 +103,8 @@
 		D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FiSHyExtensions.h"; sourceTree = "<group>"; };
 		D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FiSHyExtensions.m"; sourceTree = "<group>"; };
 		D4B700740B91F87900E6FF65 /* CHANGELOG.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.txt; sourceTree = "<group>"; };
+		D4B702140B9230E400E6FF65 /* FiSHMisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHMisc.h; sourceTree = "<group>"; };
+		D4B702150B9230E400E6FF65 /* FiSHMisc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHMisc.m; sourceTree = "<group>"; };
 		D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		D4D8D8930B824922000FA9F8 /* fish.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = fish.cpp; sourceTree = "<group>"; };
 		D4D8D8940B824922000FA9F8 /* fish.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fish.h; sourceTree = "<group>"; };
@@ -185,6 +188,8 @@
 				D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */,
 				D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */,
 				D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */,
+				D4B702140B9230E400E6FF65 /* FiSHMisc.h */,
+				D4B702150B9230E400E6FF65 /* FiSHMisc.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -211,7 +216,7 @@
 		19C28FB8FE9D52D311CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D5B49B6048680CD000E48DA /* FiSHy.bundle */,
+				8D5B49B6048680CD000E48DA /* FiSHy.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -291,7 +296,7 @@
 			name = FiSHy;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = FiSHy;
-			productReference = 8D5B49B6048680CD000E48DA /* FiSHy.bundle */;
+			productReference = 8D5B49B6048680CD000E48DA /* FiSHy.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -447,6 +452,7 @@
 				D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */,
 				D4A6B3840B8FB881001816EB /* FiSHEncryptionPrefs.m in Sources */,
 				D4EF67C10B91CC900018A60E /* DLog.m in Sources */,
+				D4B702160B9230E400E6FF65 /* FiSHMisc.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,8 +481,14 @@
 		1DEB913B08733D840010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "${CONFIGURATION_BUILD_DIR}/Colloquy.app/Contents/MacOS/Colloquy";
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_LOCATION = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../colloquy/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -490,8 +502,9 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = FiSHy;
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = plugin;
 				ZERO_LINK = NO;
 			};
 			name = Development;
@@ -503,8 +516,14 @@
 					ppc,
 					i386,
 				);
+				BUNDLE_LOADER = "${CONFIGURATION_BUILD_DIR}/Colloquy.app/Contents/MacOS/Colloquy";
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = /tmp/FiSHy.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../colloquy/Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -516,8 +535,12 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = FiSHy;
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
 		};
@@ -526,6 +549,7 @@
 			buildSettings = {
 				APPLICATION_VERSION = 0.3.0b1;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -544,6 +568,7 @@
 			buildSettings = {
 				APPLICATION_VERSION = 0.3.0b1;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -563,8 +588,14 @@
 					ppc,
 					i386,
 				);
+				BUNDLE_LOADER = "${CONFIGURATION_BUILD_DIR}/Colloquy.app/Contents/MacOS/Colloquy";
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_LOCATION = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../colloquy/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -578,8 +609,12 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = FiSHy;
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = plugin;
 				ZERO_LINK = NO;
 			};
 			name = "Development (Universal)";
@@ -589,6 +624,7 @@
 			buildSettings = {
 				APPLICATION_VERSION = 0.3.0b1;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (

@@ -34,28 +34,18 @@ using namespace fish;
    return self;
 }
 
-- (FiSHCypherResult)encodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;
+- (void)encodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;
 {
    string inputString((const char*)[inputData bytes], [inputData length]);
    stringstream outputStream;
    // TODO: Is utf8 the best option for the string? probably better to make sure keys are always pure ascii.
    string keyString([theKey UTF8String]);
-   FiSHCypherResult result;
-   switch (encode(inputString, outputStream, keyString, false))
-   {
-      case success: result = FiSHCypherSuccess; break;
-      case cut: result = FiSHCypherTextCut; break;
-      case plain_text: result = FiSHCypherPlainText; break;
-      case bad_chars: result = FiSHCypherBadCharacters; break;
-      default:
-         // Invalid return code.
-         return FiSHCypherUnknownError;
-   }
+   encode(inputString, outputStream, keyString, false);
    // TODO: The following assumes that during encoding no splitting took place.
    string tempOutputString;
    getline(outputStream, tempOutputString);
    *outputData = [NSData dataWithBytes:tempOutputString.data() length:tempOutputString.size()];
-   return result;
+   return;
 }
 
 - (FiSHCypherResult)decodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;

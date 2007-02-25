@@ -32,7 +32,7 @@ typedef enum
 {
 
 }
-- (FiSHCypherResult)encodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;
+- (void)encodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;
 - (FiSHCypherResult)decodeData:(NSData *)inputData intoData:(NSData **)outputData key:(NSString *)theKey;
 
 @end
