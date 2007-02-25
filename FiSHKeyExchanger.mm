@@ -49,7 +49,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
 {
    if (self = [super init])
    {
-      temporaryKeyExchangeInfosLock_ = [[NSLock alloc] init];
+      temporaryKeyExchangeInfosLock_ = [[NSRecursiveLock alloc] init];
       temporaryKeyExchangeInfos_ = [[NSMutableDictionary alloc] init];
 
       delegate_ = delegate;
@@ -141,6 +141,9 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
 - (void)addTemporaryKeyExchangeInfos:(NSValue *)dhInfos forNickname:(NSString *)nickname onConnection:(id)connection;
 {
    [temporaryKeyExchangeInfosLock_ lock];
+   
+   // If we have infos for prior keyexchanges still around, make sure to remove them.
+   [self removeTemporaryKeyExchangeInfosForNickName:nickname onConnection:connection];
    
    // Get the dictionary containing key pairs for the current connection.
    NSMutableDictionary *keyExchangeInfosForNicknames = [temporaryKeyExchangeInfos_ objectForKey:connection];

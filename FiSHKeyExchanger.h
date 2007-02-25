@@ -24,7 +24,7 @@
 @interface FiSHKeyExchanger : NSObject
 {
    NSMutableDictionary *temporaryKeyExchangeInfos_;
-   NSLock *temporaryKeyExchangeInfosLock_;
+   NSRecursiveLock *temporaryKeyExchangeInfosLock_;
    
    id <FiSHKeyExchangerDelegate> delegate_;
 }
