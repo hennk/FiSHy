@@ -22,6 +22,7 @@
 		D496F3DB0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D496F3DA0B80BDB60015B1F2 /* NSString+FiSHyExtensions.m */; };
 		D4A6B3840B8FB881001816EB /* FiSHEncryptionPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */; };
 		D4AFBC4A0B8A2F070086B38A /* NSData+FiSHyExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */; };
+		D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4B700740B91F87900E6FF65 /* CHANGELOG.txt */; };
 		D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */; };
 		D4EF67C10B91CC900018A60E /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D4EF67C00B91CC900018A60E /* DLog.m */; };
 /* End PBXBuildFile section */
@@ -100,6 +101,7 @@
 		D4A6B3830B8FB881001816EB /* FiSHEncryptionPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiSHEncryptionPrefs.m; sourceTree = "<group>"; };
 		D4AFBC480B8A2F070086B38A /* NSData+FiSHyExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FiSHyExtensions.h"; sourceTree = "<group>"; };
 		D4AFBC490B8A2F070086B38A /* NSData+FiSHyExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FiSHyExtensions.m"; sourceTree = "<group>"; };
+		D4B700740B91F87900E6FF65 /* CHANGELOG.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.txt; sourceTree = "<group>"; };
 		D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		D4D8D8930B824922000FA9F8 /* fish.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = fish.cpp; sourceTree = "<group>"; };
 		D4D8D8940B824922000FA9F8 /* fish.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fish.h; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				D4E2816C0B8D0E0F0095A792 /* READ ME.rtf */,
+				D4B700740B91F87900E6FF65 /* CHANGELOG.txt */,
 				D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
@@ -361,6 +364,7 @@
 			files = (
 				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
 				D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */,
+				D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,7 +427,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ $BUILD_STYLE != \"Release (Universal)\" ]]; then\n\texit\nfi\n$PROJECT_DIR/buildDMG.pl -dmgName \"$PRODUCT_NAME-$APPLICATION_VERSION\".0 \\\n                         -buildDir \"$HOME/Desktop\" \\\n                         -volName \"$PRODUCT_NAME\" \\\n                         -compressionLevel 9 \\\n                         \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \"$PROJECT_DIR/READ ME.rtf\" \"$PROJECT_DIR/LICENSE.txt\"";
+			shellScript = "if [[ $BUILD_STYLE != \"Release (Universal)\" ]]; then\n\texit\nfi\n$PROJECT_DIR/buildDMG.pl -dmgName \"$PRODUCT_NAME-$APPLICATION_VERSION\".0 \\\n                         -buildDir \"$HOME/Desktop\" \\\n                         -volName \"$PRODUCT_NAME\" \\\n                         -compressionLevel 9 \\\n                         \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \\\n                         \"$PROJECT_DIR/READ ME.rtf\" \\\n                         \"$PROJECT_DIR/LICENSE.txt\" \\\n                         \"$PROJECT_DIR/CHANGELOG.txt\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

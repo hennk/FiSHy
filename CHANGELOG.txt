@@ -1,0 +1,5 @@
+0.3.0b1:
+- Fixed a crash when a second /keyx was sent to a nick for which another /keyx was already pending.
+- Now prints a message when a /keyx timed out.
+- Logging to Console is disabled per default. To enable it, set the environment variable DEBUG to YES.
+- Updated to use new Colloquy features introduced with the second version of the patch for ticket 1015.
