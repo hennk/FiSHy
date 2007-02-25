@@ -14,15 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-//
-// Prefix header for all source files of the 'FiSHy' target in the 'FiSHy' project.
-//
 
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-    #import "DLog.h"
-#endif
+#import <Cocoa/Cocoa.h>
 
-#ifndef MAC_OS_X_VERSION_10_5
-   #define MAC_OS_X_VERSION_10_5 1050
-#endif
+#define DLog(s,...) [DLog logFile:__FILE__ lineNumber:__LINE__ format:(s),##__VA_ARGS__]
+#define DFLog(s,...) [DLog logFile:__FILE__ lineNumber:__LINE__ function:(char*)__FUNCTION__ format:(s),##__VA_ARGS__]
+
+@interface DLog : NSObject
+{
+}
+
++ (void) logFile: (char *) sourceFile lineNumber: (int) lineNumber format: (NSString *) format, ...;
++ (void) logFile: (char *) sourceFile lineNumber: (int) lineNumber function: (char *) functionName format: (NSString *) format, ...;
++ (void) setLogOn: (BOOL) logOn;
+
+@end

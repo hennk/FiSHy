@@ -40,6 +40,8 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
 - (NSDictionary *)temporaryKeyExchangeInfosForNickname:(NSString *)nickname onConnection:(id)connection;
 - (void)removeTemporaryKeyExchangeInfosForNickName:(NSString *)nickname onConnection:(id)connection;
 
+- (void)handleKeyExchangeTimeoutForNickname:(NSString *)nickname onConnection:(id)connection;
+
 - (void)handleFiSHKeyExchangeRequestFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;
 - (void)handleFiSHKeyExchangeResponseFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;
 @end
@@ -112,7 +114,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    if ([message hasStringPrefix:HCKFiSHKeyExchangeRequest encoding:NSASCIIStringEncoding])
    {
       // The notice is interpreted as a FiSH key exchange request, when its message body starts with "DH1080_INIT ".
-      NSLog(@"Got remote FiSH DH1080 key exchange request.");
+      DLog(@"Got remote FiSH DH1080 key exchange request.");
 
       NSString *remotePublicKey = [[NSString alloc] initWithData:[message subDataFromIndex:[HCKFiSHKeyExchangeRequest length]] encoding:NSASCIIStringEncoding];
       
@@ -124,7 +126,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    } else if ([message hasStringPrefix:HCKFiSHKeyExchangeResponse encoding:NSASCIIStringEncoding])
    {
       // The notice is interpreted as a FiSH key exchange response, when its message body starts with "DH1080_FINISH ".
-      NSLog(@"Got FiSH DH1080 key exchange response.");
+      DLog(@"Got FiSH DH1080 key exchange response.");
 
       NSString *remotePublicKey = [[NSString alloc] initWithData:[message subDataFromIndex:[HCKFiSHKeyExchangeResponse length]] encoding:NSASCIIStringEncoding];
       
@@ -154,10 +156,10 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    }
    
    // Build an invocation, which deletes the to be added key pair.
-   NSMethodSignature *methodSig = [self methodSignatureForSelector:@selector(removeTemporaryKeyExchangeInfosForNickName:onConnection:)];
+   NSMethodSignature *methodSig = [self methodSignatureForSelector:@selector(handleKeyExchangeTimeoutForNickname:onConnection:)];
    NSInvocation *removeOldTempKeyExchangeInfoInvocation = [NSInvocation invocationWithMethodSignature:methodSig];
    [removeOldTempKeyExchangeInfoInvocation setTarget:self];
-   [removeOldTempKeyExchangeInfoInvocation setSelector:@selector(removeTemporaryKeyExchangeInfosForNickName:onConnection:)];
+   [removeOldTempKeyExchangeInfoInvocation setSelector:@selector(handleKeyExchangeTimeoutForNickname:onConnection:)];
    [removeOldTempKeyExchangeInfoInvocation setArgument:&nickname atIndex:2];
    [removeOldTempKeyExchangeInfoInvocation setArgument:&connection atIndex:3];
    
@@ -186,7 +188,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
 
 - (void)removeTemporaryKeyExchangeInfosForNickName:(NSString *)nickname onConnection:(id)connection;
 {
-   NSLog(@"Removing temporary key exchange info for %@ on %@", nickname, connection);
+   DLog(@"Removing temporary key exchange info for %@ on %@", nickname, connection);
    
    [temporaryKeyExchangeInfosLock_ lock];
    // First, invalidate the timer set up to remove this tempo key pair after some time has passed.
@@ -194,6 +196,15 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    // Then, remove the whole entry for that key pair.
    [[temporaryKeyExchangeInfos_ objectForKey:connection] removeObjectForKey:nickname];
    [temporaryKeyExchangeInfosLock_ unlock];
+}
+
+- (void)handleKeyExchangeTimeoutForNickname:(NSString *)nickname onConnection:(id)connection;
+{
+   [self removeTemporaryKeyExchangeInfosForNickName:nickname onConnection:connection];
+   
+   [delegate_ outputStatusInformation:NSLocalizedString(@"Timed out waiting for key-exchange reply.", "Timed out waiting for key-exchange reply")
+                           forContext:nickname
+                                   on:connection];
 }
 
 - (void)handleFiSHKeyExchangeRequestFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;

@@ -142,7 +142,7 @@ FiSHSecretStore *sharedSecretStore = nil;
    if (status != noErr)
    {
       // Something went wrong looking for/chaning/adding an entry in Keychain, just bail out.
-      NSLog(@"Can't access Keychain.");
+      DLog(@"Can't access Keychain.");
    }
    
    return (status == noErr);

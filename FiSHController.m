@@ -63,7 +63,7 @@ NSString *FiSHAvoidEncCommand = @"disableEnc";
 {
    if (self = [super init])
    {
-//      NSLog(@"Loading FiSHy.");
+      DLog(@"Loading FiSHy.");
       
       keyExchanger_ = [[FiSHKeyExchanger alloc] initWithDelegate:self];
       urlToConnectionCache_ = [[NSMutableDictionary alloc] init];
@@ -166,7 +166,7 @@ NSString *FiSHAvoidEncCommand = @"disableEnc";
          [msgAttributes setObject:[NSNumber numberWithInt:FiSHCypherTextCut] forKey:@"FiSHyResult"];
          break;
       default:
-         NSLog(@"Unexpected/unknown blowfish result.");
+         DLog(@"Unexpected/unknown blowfish result.");
    }
 }
 
@@ -226,7 +226,7 @@ bail:
 {
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
@@ -237,7 +237,7 @@ bail:
    // The following checks for attributes regarding messages from the local user.
    if ([message senderIsLocalUser])
    {
-      if ([[[message attributes] objectForKey:@"shouldEncrypt"] boolValue] && [encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefAvoidEncrypted)
+      if ([[message objectForKey:@"shouldEncrypt"] boolValue] && [encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefAvoidEncrypted)
       {
          NSTextStorage *body = [message body];
          [body appendAttributedString:[[[NSAttributedString alloc] initWithString:FiSHEncryptedMessageMarker 
@@ -249,7 +249,7 @@ bail:
    } else
    {
       // The following checks for attributes regarding messages not from the local user.
-      BOOL decrypted = [[[message attributes] objectForKey:@"decrypted"] boolValue];
+      BOOL decrypted = [[message objectForKey:@"decrypted"] boolValue];
       FiSHEncPrefKey encPref = [encPrefs_ preferenceForService:nil account:targetName];
       NSString *errorMsg = nil;
       if (decrypted && encPref == FiSHEncPrefAvoidEncrypted)
@@ -276,7 +276,7 @@ bail:
 {
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
@@ -288,18 +288,10 @@ bail:
    // TODO: Handle service.
    if ([encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefPreferEncrypted)
    {
-      NSMutableDictionary *attributes = [[message attributes] mutableCopy];
-      if (!attributes)
-         attributes = [NSMutableDictionary dictionary];
-      [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
-      [message setAttributes:attributes];
+      [message setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
    } else if ([encPrefs_ preferenceForService:nil account:targetName] == FiSHEncPrefAvoidEncrypted)
    {
-      NSMutableDictionary *attributes = [[message attributes] mutableCopy];
-      if (!attributes)
-         attributes = [NSMutableDictionary dictionary];
-      [attributes setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
-      [message setAttributes:attributes];
+      [message setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    }
 }
 
@@ -321,7 +313,7 @@ bail:
    // So check first for the correct class-membership before proceeding.
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return NO;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
@@ -336,7 +328,7 @@ bail:
       else
       {
          // TODO: Put out notice to user.
-         NSLog(@"No argument provided to /keyx, aborting.");
+         DLog(@"No argument provided to /keyx, aborting.");
          return NO;
       }
    }
@@ -344,7 +336,7 @@ bail:
    if ([argumentString hasPrefix:@"#"] || [argumentString hasPrefix:@"&"])
    {
       // TODO: Put out notice to user.
-      NSLog(@"Key exchange is only supported for nicknames, not for channels, aborting.");
+      DLog(@"Key exchange is only supported for nicknames, not for channels, aborting.");
       return NO;
    }
    
@@ -362,7 +354,7 @@ bail:
    if (!argumentString || [argumentString length] <= 0)
    {
       // TODO: Put out notice to user.
-      NSLog(@"No arguments provided to /setkey, aborting.");
+      DLog(@"No arguments provided to /setkey, aborting.");
       return NO;
    }
 
@@ -371,7 +363,7 @@ bail:
    // So check first for the correct class-membership before proceeding.
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return NO;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
@@ -390,7 +382,7 @@ bail:
          account = [[view target] name];
       else {
          // TODO: Put out notice to user.
-         NSLog(@"SetKey expects exactly 2 arguments, aborting.");
+         DLog(@"SetKey expects exactly 2 arguments, aborting.");
          return NO;
       }
       secret = [argumentList objectAtIndex:0];
@@ -401,7 +393,7 @@ bail:
    } else
    {
       // TODO: Put out notice to user.
-      NSLog(@"SetKey expects exactly 2 arguments, aborting.");
+      DLog(@"SetKey expects exactly 2 arguments, aborting.");
       return NO;
    }
    
@@ -425,14 +417,14 @@ bail:
 {
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return NO;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
    JVDirectChatPanel *view = (JVDirectChatPanel *)aView;
    
    JVMutableChatMessage *msg = [[[NSClassFromString(@"JVMutableChatMessage") alloc] initWithText:arguments sender:[connection localUser]] autorelease];
-   [msg setAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"]];
+   [msg setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    [view echoSentMessageToDisplay:msg];
    [view sendMessage:msg];
    
@@ -443,7 +435,7 @@ bail:
 {
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return NO;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
@@ -460,7 +452,7 @@ bail:
    } else
    {
       // TODO: Put out notice to user.
-      NSLog(@"Command expects exactly 1 argument");
+      DLog(@"Command expects exactly 1 argument");
       return NO;
    }
    
@@ -491,7 +483,7 @@ bail:
    // So check first for the correct class-membership before proceeding.
    if (![aView isKindOfClass:NSClassFromString(@"JVDirectChatPanel")])
    {
-      NSLog(@"Unexpected view class encountered.");
+      DLog(@"Unexpected view class encountered.");
       return NO;
    }
    // It's now safe to typecast view, to prevent compiler-warnings later.
