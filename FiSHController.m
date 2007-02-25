@@ -360,17 +360,8 @@ bail:
 
 #pragma mark Command handlers
 
-- (BOOL)processKeyExchangeCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView;
+- (BOOL)processKeyExchangeCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
 {
-   // Make sure that aView really is a direct chat panel.
-   JVDirectChatPanel *view = FiSHDirectChatPanelForChatViewController(aView);
-   if (!view)
-   {
-      DLog(@"Ignoring unsupported chat controller type.");
-      return;
-   }
-
-   
    NSString *argumentString = [arguments string];
    // If no argument has been given, try to deduce it from the current view. This only works for queries, as key exchange for channels is not supported.
    if (!argumentString || [argumentString length] <= 0)
@@ -398,18 +389,8 @@ bail:
    return YES;
 }
 
-- (BOOL)processSetKeyCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView;
+- (BOOL)processSetKeyCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
 {
-   // Make sure that aView really is a direct chat panel.
-   JVDirectChatPanel *view = FiSHDirectChatPanelForChatViewController(aView);
-   if (!view)
-   {
-      DLog(@"Ignoring unsupported chat controller type.");
-      return;
-   }
-
-   
-   NSString *argumentString = [arguments string];
    NSArray *argumentList = [[arguments string] FiSH_arguments];
    NSString *secret = nil;
    NSString *account = nil;
@@ -450,17 +431,8 @@ bail:
    return YES;
 }
 
-- (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView;
+- (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
 {
-   // Make sure that aView really is a direct chat panel.
-   JVDirectChatPanel *view = FiSHDirectChatPanelForChatViewController(aView);
-   if (!view)
-   {
-      DLog(@"Ignoring unsupported chat controller type.");
-      return;
-   }
-
-   
    JVMutableChatMessage *msg = [[[NSClassFromString(@"JVMutableChatMessage") alloc] initWithText:arguments sender:[connection localUser]] autorelease];
    [msg setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    [view echoSentMessageToDisplay:msg];
@@ -469,17 +441,8 @@ bail:
    return YES;
 }
 
-- (BOOL) processEncryptionPreferenceCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(id <JVChatViewController>)aView pref:(FiSHEncPrefKey)encPref;
+- (BOOL) processEncryptionPreferenceCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view pref:(FiSHEncPrefKey)encPref;
 {
-   // Make sure that aView really is a direct chat panel.
-   JVDirectChatPanel *view = FiSHDirectChatPanelForChatViewController(aView);
-   if (!view)
-   {
-      DLog(@"Ignoring unsupported chat controller type.");
-      return;
-   }
-   
-   
    NSArray *argumentList = [[arguments string] FiSH_arguments];
    NSString *targetName = nil;
    if ([argumentList count] == 1)
@@ -525,7 +488,7 @@ bail:
    if (!view)
    {
       DLog(@"Ignoring unsupported chat controller type.");
-      return;
+      return NO;
    }
    
    

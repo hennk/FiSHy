@@ -32,7 +32,7 @@ NSString *FiSHNameForChatObject(id chatObject)
       return nil;
 }
 
-BOOL FiSHIsIRCConnection(MVChatConnection *connection)
+BOOL FiSHIsIRCConnection(id connection)
 {
-   return [connection isKindOfClass:NSClassFromString(@"MVIRCChatConnection")] )
+   return [connection isKindOfClass:NSClassFromString(@"MVIRCChatConnection")];
 }

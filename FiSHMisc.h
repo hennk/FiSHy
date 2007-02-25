@@ -18,4 +18,4 @@ JVDirectChatPanel *FiSHDirectChatPanelForChatViewController(id <JVChatViewContro
 /// Returns the name for the supplied object. chatObject is either a ChatRoom or a ChatUser. Returns nil, if chatObject is not of any supported class.
 NSString *FiSHNameForChatObject(id chatObject);
 
-BOOL FiSHIsIRCConnection(MVChatConnection *connection);
+BOOL FiSHIsIRCConnection(id connection);
