@@ -547,7 +547,7 @@
 		1DEB913F08733D840010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_VERSION = 0.3.0b1;
+				APPLICATION_VERSION = 0.3.0b2;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -566,7 +566,7 @@
 		1DEB914008733D840010E9CD /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_VERSION = 0.3.0b1;
+				APPLICATION_VERSION = 0.3.0b2;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -622,7 +622,7 @@
 		D496F46F0B80D2D00015B1F2 /* Development (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_VERSION = 0.3.0b1;
+				APPLICATION_VERSION = 0.3.0b2;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
