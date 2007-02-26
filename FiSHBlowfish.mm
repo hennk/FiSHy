@@ -41,10 +41,7 @@ using namespace fish;
    // TODO: Is utf8 the best option for the string? probably better to make sure keys are always pure ascii.
    string keyString([theKey UTF8String]);
    encode(inputString, outputStream, keyString, false);
-   // TODO: The following assumes that during encoding no splitting took place.
-   string tempOutputString;
-   getline(outputStream, tempOutputString);
-   *outputData = [NSData dataWithBytes:tempOutputString.data() length:tempOutputString.size()];
+   *outputData = [NSData dataWithBytes:outputStream.str().data() length:outputStream.str().size()];
    return;
 }
 

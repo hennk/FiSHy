@@ -80,7 +80,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    {
       free(dhKeyExchanger);
 
-      [delegate_ outputStatusInformation:NSLocalizedString(@"Unknown error during key exchange.", "Unknown error during key exchange.")
+      [delegate_ outputStatusInformation:NSLocalizedString(@"Unknown error during key exchange.", "Unknown error during key exchange")
                               forContext:nickname
                                       on:connection];
       return;
@@ -228,7 +228,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    NSString *myPubKey = [NSString stringWithUTF8String:myPubKeyTemp.c_str()];
    [delegate_ sendPrivateMessage:[NSString stringWithFormat:@"%@%@", HCKFiSHKeyExchangeResponse, myPubKey] to:nickname on:connection];
    
-   // TODO: Check if UTF8 is really the adequate encoding of a key.
+   // The remote public key has to be sent base64-encoded, so it is safe to use UTF8 here.
    std::string remotePublicKeyTemp([remotePublicKeyData UTF8String]);
    // Decode the base64 encoded received public key. It has to have a length of 135 to be valid.
    dh_base64decode(remotePublicKeyTemp);

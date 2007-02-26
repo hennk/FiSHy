@@ -171,18 +171,17 @@ NSString *FiSHAvoidEncCommand = @"disableEnc";
    
    // Try to decrypt the raw encrypted text.
    NSData *decryptedData = nil;
-   switch ([blowFisher_ decodeData:message intoData:&decryptedData key:secret])
+   FiSHCypherResult decryptionResult = [blowFisher_ decodeData:message intoData:&decryptedData key:secret];
+   switch (decryptionResult)
    {
       case FiSHCypherTextCut:
       case FiSHCypherSuccess:
          [message setData:decryptedData];
-         [msgAttributes setObject:[NSNumber numberWithInt:FiSHCypherTextCut] forKey:@"FiSHyResult"];
          [msgAttributes setObject:[NSNumber numberWithBool:YES] forKey:@"decrypted"]; 
-         break;
       case FiSHCypherBadCharacters:
       case FiSHCypherUnknownError:
       case FiSHCypherPlainText:
-         [msgAttributes setObject:[NSNumber numberWithInt:FiSHCypherTextCut] forKey:@"FiSHyResult"];
+         [msgAttributes setObject:[NSNumber numberWithInt:decryptionResult] forKey:@"FiSHyResult"];
          break;
       default:
          DLog(@"Unexpected/unknown blowfish result.");
@@ -224,6 +223,7 @@ NSString *FiSHAvoidEncCommand = @"disableEnc";
    }
    
    // Try to encrypt the raw outgoing message.
+   // TODO: Should we provide cutting of overlong messages into multiple messages here? Done right, this also would include limiting the rate we send out messages to not get kicked from the server.
    NSData *encryptedData = nil;
    [blowFisher_ encodeData:message intoData:&encryptedData key:secret];
    if (!encryptedData)
@@ -282,10 +282,11 @@ bail:
       return;
    }
    
+   // TODO: Handle the @"FiSHyResult" attribute.
    // Prepare a string to mark the message if it either was encrypted in an encryption-avoiding context or unencrypted in an encryption-preferring context.
    // At two places we have to differentiate between received messages and messages from the local user. Received messages can have a @"decrypted"-attribute while local messages can have a @"shouldEncrypt"-attribute. The marker for unencrypted remote messages in an encryption-preferring context is different than for user-overridden encryption for local messages.
    NSString *messageMarker = nil;
-   BOOL hasBeenOrWillBeEncrypted = [message senderIsLocalUser] ? [[message objectForKey:@"shouldEncrypt"] boolValue] : [[message objectForKey:@"decrypted"] boolValue];
+   BOOL hasBeenOrWillBeEncrypted = [message senderIsLocalUser] ? [[message attributeForKey:@"shouldEncrypt"] boolValue] : [[message attributeForKey:@"decrypted"] boolValue];
    FiSHEncPrefKey encPref = [encPrefs_ preferenceForService:nil account:accountName];
    if (hasBeenOrWillBeEncrypted && encPref == FiSHEncPrefAvoidEncrypted)
    {
@@ -337,10 +338,10 @@ bail:
    FiSHEncPrefKey encPref = [encPrefs_ preferenceForService:nil account:accountName];
    if (encPref == FiSHEncPrefPreferEncrypted)
    {
-      [message setObject:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
+      [message setAttribute:[NSNumber numberWithBool:YES] forKey:@"shouldEncrypt"];
    } else if (encPref == FiSHEncPrefAvoidEncrypted)
    {
-      [message setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
+      [message setAttribute:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    }
 }
 
@@ -405,7 +406,6 @@ bail:
       account = FiSHNameForChatObject([view target]);
       if (!account)
       {
-         // TODO: Put out notice to user.
          DLog(@"SetKey expects exactly 2 arguments, aborting.");
          return NO;
       }
@@ -434,7 +434,7 @@ bail:
 - (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
 {
    JVMutableChatMessage *msg = [[[NSClassFromString(@"JVMutableChatMessage") alloc] initWithText:arguments sender:[connection localUser]] autorelease];
-   [msg setObject:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
+   [msg setAttribute:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    [view echoSentMessageToDisplay:msg];
    [view sendMessage:msg];
    
