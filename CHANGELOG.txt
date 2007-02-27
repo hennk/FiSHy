@@ -2,6 +2,7 @@
 - Messages sent with /+p in a room with encryption enabled are now marked as such.
 - Implement extra checks to make sure this plugin only works for IRC connections.
 - Changed the bundle-extension to .plugin.
+- Colloquy has been updated, so FiSHy now works with the latest Colloquy, downloadable at http://colloquy.info/?latest
 
 0.3.0b1:
 - Fixed a crash when a second /keyx was sent to a nick for which another /keyx was already pending.
