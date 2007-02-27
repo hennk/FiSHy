@@ -1,10 +1,11 @@
-0.3.0b2:
+0.3.0b2		2007/02/27:
+- First public release.
 - Messages sent with /+p in a room with encryption enabled are now marked as such.
 - Implement extra checks to make sure this plugin only works for IRC connections.
 - Changed the bundle-extension to .plugin.
 - Colloquy has been updated, so FiSHy now works with the latest Colloquy, downloadable at http://colloquy.info/?latest
 
-0.3.0b1:
+0.3.0b1		2007/02/25:
 - Fixed a crash when a second /keyx was sent to a nick for which another /keyx was already pending.
 - Now prints a message when a /keyx timed out.
 - Logging to Console is disabled per default. To enable it, set the environment variable DEBUG to YES.

@@ -1,6 +1,7 @@
 {\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf410
 {\fonttbl\f0\fnil\fcharset77 LucidaGrande-Bold;\f1\fnil\fcharset77 LucidaGrande;}
 {\colortbl;\red255\green255\blue255;}
+\vieww12860\viewh12420\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qc\pardirnatural
 
 \f0\b\fs48 \cf0 FiSHy
@@ -19,11 +20,11 @@
 \f0\b\fs28 \cf0 About
 \f1\b0\fs24 \
 \
-FiSHy is a plugin for Colloquy, providing Blowfish encryption support. You can encrypt messages you send to chat rooms or queries, and decrypt incoming messages. It also supports automatic Diffie-Hellmann key-exchanges for queries, so you can share channel-keys securely. It fits nicely in the OS X ecosystem, by saving keys in the Keychain, and by using a simple Drag'n'Drop install. It is compatible with FiSH, mIRCryption and Dirt.\
+FiSHy is a plugin for Colloquy, providing Blowfish encryption support. You can encrypt messages you send to chat rooms or queries, and decrypt incoming messages. It also supports automatic Diffie-Hellmann key-exchanges for queries, so you can share channel-keys securely. It fits nicely in the OS X ecosystem, by saving keys in the Keychain, and by using a simple Drag'n'Drop install. It is compatible with FiSH, mIRCryption and Dirt. It is a Universal Binary and works on any Mac running OS X 10.4\
 \
-FiSHy uses the Blowfish and Key-Exchange engine from Dirt <dirtirc.sf.net>, an encrypting IRC proxy. So if FiSHy doesn't work for you, or you want to use another client, please check out Dirt.\
+FiSHy uses the Blowfish and Key-Exchange engine from Dirt ({\field{\*\fldinst{HYPERLINK "http://dirtirc.sourceforge.net/"}}{\fldrslt http://dirtirc.sourceforge.net/}}), an encrypting IRC proxy. So if FiSHy doesn't work for you, or you want to use another client, please check out Dirt.\
 \
-For more information about FiSHy and to get the most recent version see <http://sourceforge.net/projects/fishy/>.\
+For more information about FiSHy and to get the most recent version see {\field{\*\fldinst{HYPERLINK "http://fishy.sourceforge.net/"}}{\fldrslt http://fishy.sourceforge.net/}}.\
 \
 \
 
@@ -39,16 +40,21 @@ Colloquy: FiSHy needs the latest Colloquy release (2007/02/27 or later). You can
 \f0\b\fs28 Installation
 \f1\b0\fs24 \
 \
-To install, delete any prior versions of FiSHy, then simply drag the FiSHy bundle into Colloquy's plugin folder, located at ~/Library/Application Support/Colloquy/PlugIns. Then restart Colloquy. Simply typing "/reload plugins" is 
-\f0\b not
-\f1\b0  enough if you updated to a new version of FiSHy!\
+To install, delete any prior versions of FiSHy, then simply drag the FiSHy plugin into Colloquy's plugin folder, located at ~/Library/Application Support/Colloquy/PlugIns. Then restart Colloquy. Simply typing "/reload plugins" is NOT enough if you updated to a new version of FiSHy!\
+\
+\
+
+\f0\b\fs28 Overview
+\f1\b0\fs24 \
+\
+/enableEnc <channel/nickname>				Enables default encryption for the specified channel/nick\
 \
 \
 
 \f0\b\fs28 Usage
 \f1\b0\fs24 \
 \
-FiSHy differentiates between channels and nicknames, for which encryption is enabled, and others, for which it is disabled. Every new channel/nickname is set to have encryption disabled per default. If you receive a clear-text message in a channel/query for which encryption is enabled, you will be warned. Vice-versa, encrypted messages received in a channel/query for which encryption is disabled will be marked. If you send a message to an encrypted channel/query, and encryption fails for some reason, the message won't be sent, and you will be informed about this. The message will appear locally to you, though.\
+FiSHy differentiates between channels and nicknames for which encryption is enabled, and others for which it is disabled. Every new channel/nickname is set to have encryption disabled per default. If you receive a clear-text message in a channel/query for which encryption is enabled, you will be warned. Vice-versa, encrypted messages received in a channel/query for which encryption is disabled will be marked. If you send a message to an encrypted channel/query, and encryption fails for some reason, the message won't be sent, and you will be informed about this. The message will appear locally to you, though.\
  \
 To enable encryption for a room/nickname use the /enableEnc command. This command expects one parameter, the channel or nickname for which to enable encryption.\
 	/enableEnc [<channel/nick>]\
