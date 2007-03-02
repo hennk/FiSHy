@@ -1,4 +1,4 @@
-- Replaced link to sourceforge with link to fishy.henning-kiel.com
+- Replaced link to old sourceforge with link to fishy.henning-kiel.com
 
 0.3.0b2		2007/02/27:
 - First public release.
