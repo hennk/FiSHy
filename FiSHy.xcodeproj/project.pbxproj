@@ -156,8 +156,11 @@
 				D47767270B83F74D0099B4B8 /* libssl.0.9.7.dylib */,
 				D477672E0B83F7870099B4B8 /* libcrypto.0.9.7.dylib */,
 			);
+			indentWidth = 3;
 			name = "Frameworks and Libraries";
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
@@ -168,8 +171,11 @@
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 			);
+			indentWidth = 3;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
@@ -191,8 +197,11 @@
 				D4B702140B9230E400E6FF65 /* FiSHMisc.h */,
 				D4B702150B9230E400E6FF65 /* FiSHMisc.m */,
 			);
+			indentWidth = 3;
 			name = Classes;
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
@@ -218,8 +227,11 @@
 			children = (
 				8D5B49B6048680CD000E48DA /* FiSHy.plugin */,
 			);
+			indentWidth = 3;
 			name = Products;
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
@@ -229,8 +241,11 @@
 				D4EF67C00B91CC900018A60E /* DLog.m */,
 				D4D8D8850B8248C0000FA9F8 /* Dirt */,
 			);
+			indentWidth = 3;
 			name = "Other Sources";
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 		D4AFB9860B8A09740086B38A /* Products */ = {
 			isa = PBXGroup;
@@ -270,8 +285,11 @@
 			children = (
 				D4E281520B8D06330095A792 /* buildDMG.pl */,
 			);
+			indentWidth = 3;
 			name = "Build Tools";
 			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
 		};
 /* End PBXGroup section */
 
@@ -559,7 +577,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SUBVERSION_INSTALL_DIR = /opt/local/bin;
+				SUBVERSION_INSTALL_DIR = /sw/bin;
 				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
 			};
 			name = Development;
@@ -578,7 +596,7 @@
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SUBVERSION_INSTALL_DIR = /opt/local/bin;
+				SUBVERSION_INSTALL_DIR = /sw/bin;
 				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
 			};
 			name = "Release (Universal)";
@@ -636,7 +654,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SUBVERSION_INSTALL_DIR = /opt/local/bin;
+				SUBVERSION_INSTALL_DIR = /sw/bin;
 				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
 			};
 			name = "Development (Universal)";
