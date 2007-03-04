@@ -41,10 +41,6 @@
 #define FiSHExpectedEncryptionMarker NSLocalizedString(@"Unencrypted message in encrypted room!", @"Unencrypted message in encrypted room!")
 #define FiSHEncryptionOverriddenMarker NSLocalizedString(@"Encryption overridden", @"Encryption overridden")
 
-// Prefix of outgoing messages which we should not encrypt.
-// TODO: Make this user-configurable.
-NSString *FiSHNonEncryptingPrefix = @"+p";
-
 // Command used to trigger an automatic key exchange. Syntax: /keyx [nick]. If no nick is given, the nick from the current query is used.
 NSString *FiSHKeyExchangeCommand = @"keyx";
 // Command used to set a key manually. Syntax: /setkey [#channel/nick] newkey. Contrary to keys from automated key exchange, these will be saved to Keychain. If only one argument is given, will use it as key, and will try to deduce the #channel/nick from current view's target.
@@ -52,6 +48,8 @@ NSString *FiSHSetKeyCommand = @"setkey";
 // Commands to set encryption preference for a chat-room/query
 NSString *FiSHPreferEncCommand = @"enableEnc";
 NSString *FiSHAvoidEncCommand = @"disableEnc";
+// Command to override encryption for a single message
+NSString *FiSHOverrideEncCommand = @"+p";
 
 
 
@@ -497,7 +495,7 @@ bail:
       return [self processKeyExchangeCommandWithArguments:arguments toConnection:connection inView:view];
    if ([command isEqualToString:FiSHSetKeyCommand])
       return [self processSetKeyCommandWithArguments:arguments toConnection:connection inView:view];
-   if ([command isEqualToString:FiSHNonEncryptingPrefix])
+   if ([command isEqualToString:FiSHOverrideEncCommand])
       return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inView:view];
    if ([command isEqualToString:FiSHPreferEncCommand])
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefPreferEncrypted];
