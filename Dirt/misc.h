@@ -1,6 +1,5 @@
 // FiSHy, a plugin for Colloquy providing Blowfish encryption.
-// Copyright (C) 2007  TmowhrekF
-// Modifications Copyright (C) 2007  Henning Kiel
+// Copyright (C) 2007  Henning Kiel
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
