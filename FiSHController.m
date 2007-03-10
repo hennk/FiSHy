@@ -24,6 +24,7 @@
 #import "Panels/JVDirectChatPanel.h"
 #import "Chat Core/MVChatUser.h"
 #import "Chat Core/MVChatConnection.h"
+#import "Additions/NSStringAdditions.h"
 #import "Models/JVChatTranscript.h"
 
 #import "FiSHSecretStore.h"
@@ -120,7 +121,7 @@ NSString *FiSHOverrideEncCommand = @"+p";
 
       // TODO: Handle service correclty.
       [encPrefs_ setTemporaryPreference:FiSHEncPrefPreferEncrypted forService:nil account:nickname];
-}
+   }
 }
 
 #pragma mark MVIRCChatConnectionPlugin
@@ -132,7 +133,7 @@ NSString *FiSHOverrideEncCommand = @"+p";
       return;
 
    
-   // If we received a notice, it is possible, that it's a key exchange request/response. Let the FiSHKeyExchanger decide this.
+   // If we received a notice, it is possible, that it's a key exchange request/response. Let the FiSHKeyExchanger decide this. If it is a key exchange we won't handle it here and return directly.
    if ([[msgAttributes objectForKey:@"notice"] boolValue])
    {
       MVChatConnection *theConnection = (MVChatConnection *)[sender connection];
@@ -490,16 +491,16 @@ bail:
    }
    
    
-   // Check for correct command string.
-   if ([command isEqualToString:FiSHKeyExchangeCommand])
+   // Check for correct command string. We don't care about case.
+   if ([command isCaseInsensitiveEqualToString:FiSHKeyExchangeCommand])
       return [self processKeyExchangeCommandWithArguments:arguments toConnection:connection inView:view];
-   if ([command isEqualToString:FiSHSetKeyCommand])
+   if ([command isCaseInsensitiveEqualToString:FiSHSetKeyCommand])
       return [self processSetKeyCommandWithArguments:arguments toConnection:connection inView:view];
-   if ([command isEqualToString:FiSHOverrideEncCommand])
+   if ([command isCaseInsensitiveEqualToString:FiSHOverrideEncCommand])
       return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inView:view];
-   if ([command isEqualToString:FiSHPreferEncCommand])
+   if ([command isCaseInsensitiveEqualToString:FiSHPreferEncCommand])
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefPreferEncrypted];
-   if ([command isEqualToString:FiSHAvoidEncCommand])
+   if ([command isCaseInsensitiveEqualToString:FiSHAvoidEncCommand])
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefAvoidEncrypted];
    
    return NO;
