@@ -25,6 +25,7 @@
 		D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4B700740B91F87900E6FF65 /* CHANGELOG.txt */; };
 		D4B702160B9230E400E6FF65 /* FiSHMisc.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B702150B9230E400E6FF65 /* FiSHMisc.m */; };
 		D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */; };
+		D4E84DE10BA8BAAE000FE317 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4E84DDF0BA8BAAE000FE317 /* Localizable.strings */; };
 		D4EF67C10B91CC900018A60E /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D4EF67C00B91CC900018A60E /* DLog.m */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +115,7 @@
 		D4D8D8980B824922000FA9F8 /* dh1080.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dh1080.cpp; sourceTree = "<group>"; };
 		D4E281520B8D06330095A792 /* buildDMG.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = buildDMG.pl; sourceTree = "<group>"; };
 		D4E2816C0B8D0E0F0095A792 /* READ ME.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "READ ME.rtf"; sourceTree = "<group>"; };
+		D4E84DE00BA8BAAE000FE317 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D4EF67BF0B91CC900018A60E /* DLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLog.h; sourceTree = "<group>"; };
 		D4EF67C00B91CC900018A60E /* DLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLog.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -170,6 +172,7 @@
 				D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+				D4E84DDF0BA8BAAE000FE317 /* Localizable.strings */,
 			);
 			indentWidth = 3;
 			name = Resources;
@@ -388,6 +391,7 @@
 				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
 				D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */,
 				D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */,
+				D4E84DE10BA8BAAE000FE317 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,6 +497,14 @@
 				089C167EFE841241C02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D4E84DDF0BA8BAAE000FE317 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4E84DE00BA8BAAE000FE317 /* English */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -62,6 +62,8 @@ To install, delete any prior versions of FiSHy, then simply drag the FiSHy plugi
 FiSHy differentiates between channels and nicknames for which encryption is enabled, and others for which it is disabled. Every new channel/nickname is set to have encryption disabled per default. If you receive a clear-text message in a channel/query for which encryption is enabled, you will be warned. Vice-versa, encrypted messages received in a channel/query for which encryption is disabled will be marked. If you send a message to an encrypted channel/query, and encryption fails for some reason, the message won't be sent, and you will be informed about this. The message will appear locally to you, though.\
 \
 FiSHy currently does not differentiate between IRC servers/connections when saving keys and encryption preferences. This means that you can't have different keys/preferences for channels/nicknames, which have the same name but are on different networks.\
+\
+FiSHy does differentiate between channels/nicknames which only differ in case, so make sure to always use the same case when changing settings for channels/nicknames. You might use this as a workaround to above problem, by using a differing case for channels with the same name.\
  \
 To enable encryption for a room/nickname use the /enableEnc command. This command expects one parameter, the channel or nickname for which to enable encryption.\
 	/enableEnc [<channel/nick>]\

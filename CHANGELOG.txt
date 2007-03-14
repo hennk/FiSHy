@@ -1,4 +1,9 @@
-- Replaced link to old sourceforge with link to fishy.henning-kiel.com
+0.3.0       2007/03/15
+- Made FiSHy localizable.
+- Fixes a crash after a key-exchange timed out.
+- Make commands case-insensitive.
+- Make commands work in console windows, too.
+- Replaced link to old sourceforge with link to fishy.henning-kiel.com.
 
 0.3.0b2		2007/02/27:
 - First public release.
