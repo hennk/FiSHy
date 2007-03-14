@@ -40,7 +40,7 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
 - (NSDictionary *)temporaryKeyExchangeInfosForNickname:(NSString *)nickname onConnection:(id)connection;
 - (void)removeTemporaryKeyExchangeInfosForNickName:(NSString *)nickname onConnection:(id)connection;
 
-- (void)handleKeyExchangeTimeoutForNickname:(NSString *)nickname onConnection:(id)connection;
+- (void)handleKeyExchangeTimeout:(NSTimer *)aTimer;
 
 - (void)handleFiSHKeyExchangeRequestFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;
 - (void)handleFiSHKeyExchangeResponseFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;
@@ -155,19 +155,19 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
       [temporaryKeyExchangeInfos_ setObject:keyExchangeInfosForNicknames forKey:connection];
    }
    
-   // Build an invocation, which deletes the to be added key pair.
-   NSMethodSignature *methodSig = [self methodSignatureForSelector:@selector(handleKeyExchangeTimeoutForNickname:onConnection:)];
-   NSInvocation *removeOldTempKeyExchangeInfoInvocation = [NSInvocation invocationWithMethodSignature:methodSig];
-   [removeOldTempKeyExchangeInfoInvocation setTarget:self];
-   [removeOldTempKeyExchangeInfoInvocation setSelector:@selector(handleKeyExchangeTimeoutForNickname:onConnection:)];
-   [removeOldTempKeyExchangeInfoInvocation setArgument:&nickname atIndex:2];
-   [removeOldTempKeyExchangeInfoInvocation setArgument:&connection atIndex:3];
+   // Build a dictionary, which we pass to the timer, containing the necessary info to delete a request which timed out.
+   NSDictionary *timerInfoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+      nickname, @"nickname",
+      connection, @"connection",
+      nil];
    
    // Create the dictionary containing the keypair, and the timer used to delete the key pair if we don't use it during a certain amount of time.
    NSDictionary *keyPair = [NSDictionary dictionaryWithObjectsAndKeys:
       dhInfos, FiSHKeyExchangeInfoDH1080Key,
-      [NSTimer scheduledTimerWithTimeInterval:HCKMaxTimeToWaitForDH1080Response 
-                                   invocation:removeOldTempKeyExchangeInfoInvocation 
+      [NSTimer scheduledTimerWithTimeInterval:HCKMaxTimeToWaitForDH1080Response
+                                       target:self
+                                     selector:@selector(handleKeyExchangeTimeout:)
+                                     userInfo:timerInfoDict
                                       repeats:NO], FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey,
       nil];
    
@@ -198,13 +198,22 @@ const NSString *FiSHKeyExchangeInfoRemoveOldTempKeyPairTimerKey = @"FiSHKeyExcha
    [temporaryKeyExchangeInfosLock_ unlock];
 }
 
-- (void)handleKeyExchangeTimeoutForNickname:(NSString *)nickname onConnection:(id)connection;
+- (void)handleKeyExchangeTimeout:(NSTimer *)aTimer;
 {
-   [self removeTemporaryKeyExchangeInfosForNickName:nickname onConnection:connection];
+   // Retain the user info, as it would be released later when we invalidate the timer.
+   NSDictionary *timerInfoDict = [[aTimer userInfo] retain];
+   NSString *nickname = [timerInfoDict objectForKey:@"nickname"];
+   id connection = [timerInfoDict objectForKey:@"connection"];
    
+   DLog(@"Key exchange for %@ on %@ timed out", nickname, connection);
+   
+   [self removeTemporaryKeyExchangeInfosForNickName:nickname onConnection:connection];
+
    [delegate_ outputStatusInformation:NSLocalizedString(@"Timed out waiting for key-exchange reply.", "Timed out waiting for key-exchange reply")
                            forContext:nickname
                                    on:connection];
+
+   [timerInfoDict release];
 }
 
 - (void)handleFiSHKeyExchangeRequestFrom:(NSString *)nickname on:(id)connection withRemotePublicKeyData:(NSString *)remotePublicKeyData;

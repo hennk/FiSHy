@@ -360,7 +360,11 @@ bail:
 
 #pragma mark Command handlers
 
-- (BOOL)processKeyExchangeCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
+/// User command to initiate a key exchange
+/**
+ view can be nil, if this command was not typed in a direct chat panel.
+ */
+- (BOOL)processKeyExchangeCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inDirectChatPanel:(JVDirectChatPanel *)view;
 {
    NSString *argumentString = [arguments string];
    // If no argument has been given, try to deduce it from the current view. This only works for queries, as key exchange for channels is not supported.
@@ -389,7 +393,11 @@ bail:
    return YES;
 }
 
-- (BOOL)processSetKeyCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
+/// User command to set the key for a room/nick
+/**
+ view can be nil, if this command was not typed in a direct chat panel.
+ */
+- (BOOL)processSetKeyCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inDirectChatPanel:(JVDirectChatPanel *)view;
 {
    NSArray *argumentList = [[arguments string] FiSH_arguments];
    NSString *secret = nil;
@@ -406,7 +414,7 @@ bail:
       if (!account)
       {
          DLog(@"SetKey expects exactly 2 arguments, aborting.");
-         return NO;
+         return YES;
       }
       secret = [argumentList objectAtIndex:0];
    } else if ([argumentList count] == 2)
@@ -420,7 +428,7 @@ bail:
    if (![[FiSHSecretStore sharedSecretStore] storeSecret:secret forService:nil account:account isTemporary:NO])
    {
       [view addEventMessageToDisplay:NSLocalizedString(@"Failed to save the key.", @"Failed to save the key.") withName:@"KeySaveError" andAttributes:nil];   
-      return NO;
+      return YES;
    }
    [view addEventMessageToDisplay:NSLocalizedString(@"Key saved to Keychain.", @"Key saved to Keychain.") withName:@"KeySavedToKeychain" andAttributes:nil];   
    
@@ -430,8 +438,19 @@ bail:
    return YES;
 }
 
-- (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view;
+/// User command to send an unencrypted message to an unencrypted room/nick.
+/**
+ view can be nil, if this command was not typed in a direct chat panel.
+ */
+- (BOOL)processSendUnecryptedCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inDirectChatPanel:(JVDirectChatPanel *)view;
 {
+   if (!view)
+   {
+      DLog(@"Command only supported in chat windows.");
+      return YES;
+   }
+   
+   
    JVMutableChatMessage *msg = [[[NSClassFromString(@"JVMutableChatMessage") alloc] initWithText:arguments sender:[connection localUser]] autorelease];
    [msg setAttribute:[NSNumber numberWithBool:YES] forKey:@"sendUnencrypted"];
    [view echoSentMessageToDisplay:msg];
@@ -440,20 +459,24 @@ bail:
    return YES;
 }
 
-- (BOOL) processEncryptionPreferenceCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inView:(JVDirectChatPanel *)view pref:(FiSHEncPrefKey)encPref;
+/// User command to enable/disable encryption for a room/nick.
+/**
+ view can be nil, if this command was not typed in a direct chat panel.
+ */
+- (BOOL) processEncryptionPreferenceCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inDirectChatPanel:(JVDirectChatPanel *)view pref:(FiSHEncPrefKey)encPref;
 {
    NSArray *argumentList = [[arguments string] FiSH_arguments];
    NSString *targetName = nil;
    if ([argumentList count] == 1)
    {
       targetName = [argumentList objectAtIndex:0];
-   } else if ([argumentList count] == 0)
+   } else if ([argumentList count] == 0 && view)
    {
       targetName = [[view target] isKindOfClass:NSClassFromString(@"MVChatUser")] ? [[view target] nickname] : [[view target] name];
    } else
    {
       DLog(@"Command expects exactly 1 argument");
-      return NO;
+      return YES;
    }
    
    // TODO: Differenciate between services here.
@@ -476,32 +499,32 @@ bail:
 
 #pragma mark MVChatPluginCommandSupport
 
+/// Process user commands.
+/**
+ Called by Colloquy whenever the user types a string which starts with a single /.
+ */
 - (BOOL)processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>)aView;
 {
    // We only support IRC connection.
    if (!FiSHIsIRCConnection(connection))
       return NO;
    
-   // Make sure that aView really is a direct chat panel.
+   // If aView is a direct chat panel, cast it to supply it later to the command handlers.
+   // The only other case here probably are transcript and console panels.
    JVDirectChatPanel *view = FiSHDirectChatPanelForChatViewController(aView);
-   if (!view)
-   {
-      DLog(@"Ignoring unsupported chat controller type.");
-      return NO;
-   }
    
    
    // Check for correct command string. We don't care about case.
    if ([command isCaseInsensitiveEqualToString:FiSHKeyExchangeCommand])
-      return [self processKeyExchangeCommandWithArguments:arguments toConnection:connection inView:view];
+      return [self processKeyExchangeCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view];
    if ([command isCaseInsensitiveEqualToString:FiSHSetKeyCommand])
-      return [self processSetKeyCommandWithArguments:arguments toConnection:connection inView:view];
+      return [self processSetKeyCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view];
    if ([command isCaseInsensitiveEqualToString:FiSHOverrideEncCommand])
-      return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inView:view];
+      return [self processSendUnecryptedCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view];
    if ([command isCaseInsensitiveEqualToString:FiSHPreferEncCommand])
-      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefPreferEncrypted];
+      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefPreferEncrypted];
    if ([command isCaseInsensitiveEqualToString:FiSHAvoidEncCommand])
-      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inView:view pref:FiSHEncPrefAvoidEncrypted];
+      return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefAvoidEncrypted];
    
    return NO;
 }
