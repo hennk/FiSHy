@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		D4391C3C0BAAD9A600C12ED9 /* AboutDialog.nib in Resources */ = {isa = PBXBuildFile; fileRef = D4391C3A0BAAD9A600C12ED9 /* AboutDialog.nib */; };
 		D4423DD90B84AE2B0039DCB9 /* FiSHBlowfish.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4423DD80B84AE2B0039DCB9 /* FiSHBlowfish.mm */; };
 		D4423E190B84B8630039DCB9 /* fish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4D8D8930B824922000FA9F8 /* fish.cpp */; };
 		D4423E1A0B84B8630039DCB9 /* dh1080.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4D8D8980B824922000FA9F8 /* dh1080.cpp */; };
@@ -83,6 +84,7 @@
 		8D5B49B6048680CD000E48DA /* FiSHy.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FiSHy.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		D4391C3B0BAAD9A600C12ED9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AboutDialog.nib; sourceTree = "<group>"; };
 		D4423DD70B84AE2B0039DCB9 /* FiSHBlowfish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiSHBlowfish.h; sourceTree = "<group>"; };
 		D4423DD80B84AE2B0039DCB9 /* FiSHBlowfish.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FiSHBlowfish.mm; sourceTree = "<group>"; };
 		D4423E020B84B7DF0039DCB9 /* SHA256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SHA256.c; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D4391C3A0BAAD9A600C12ED9 /* AboutDialog.nib */,
 				D4E2816C0B8D0E0F0095A792 /* READ ME.rtf */,
 				D4B700740B91F87900E6FF65 /* CHANGELOG.txt */,
 				D4BD4B070B8CD64A0016D3B9 /* LICENSE.txt */,
@@ -392,6 +395,7 @@
 				D4BD4B080B8CD64A0016D3B9 /* LICENSE.txt in Resources */,
 				D4B700750B91F87900E6FF65 /* CHANGELOG.txt in Resources */,
 				D4E84DE10BA8BAAE000FE317 /* Localizable.strings in Resources */,
+				D4391C3C0BAAD9A600C12ED9 /* AboutDialog.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,7 +415,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /usr/bin/ruby;
-			shellScript = "#! /usr/bin/ruby\n# \n# human_version_to_cfbundle_version.rb 1.0d1 (or 01000.00.01 ;-)\n#   Based on <http://www.dribin.org/dave/blog/archives/2006/08/02/versioning_os_x_apps/>\n#   Copyright (c) 2006 Jonathan 'Wolf' Rentzsch.\n#   Some rights reserved: <http://creativecommons.org/licenses/by/2.0/>\n#   Changes by Henning Kiel to make it work inside XCode Shell Phases by looking for an APPLICATION_VERSION variable, and\n#     replacing the computed value into the CFBundleVersion.\n#\n# A tool that generates CFVersionNumber+Launch Services-happy version numbers given a human version number.\n# For example, 1.2.3b4 => becomes 01020.32.04.\n# All information is encoded -- no information is lost. It's thus reversible, which this tool also does.\n\nclass VersionNumber\n  DEVELOPMENT = 'd'\n  ALPHA = 'a'\n  BETA = 'b'\n  FINAL_CANDIDATE = 'fc'\n  FINAL = ''\n  CFBUNDLEVERSION_MAP = {DEVELOPMENT=>0,ALPHA=>1,BETA=>2,FINAL_CANDIDATE=>3,FINAL=>9}\n  def initialize(version_string)\n    # First try to match CFBundleVersion's format ('01031.08.04').\n    m = version_string.strip.match(/^(\\d\\d)(\\d\\d)(\\d\\.\\d)([01239])\\.(\\d\\d)$/)\n    if m.nil?\n      # Nope, try human-style ('1.3.10b4').\n      # Man, where's RCR 237 (Named capture) when I need it?\n      m = version_string.gsub(/\\s/,'').match(/^(\\d{1,2})(\\.(\\d{1,2}))?(\\.(\\d{1,2}))?((d|a|b|fc)(\\d{1,2}))?$/)\n      raise ArgumentError, \"can't parse '#{version_string}'\" if m.nil?\n      @major = $1.to_i\n      @minor = $3.to_i\n      @bug = $5.to_i\n      if $7.nil?\n        @stage = FINAL\n        @stageNum = 0\n      else\n        @stage = $7 # Kept as a string.\n        @stageNum = $8.to_i\n      end\n      @original_version_string_was_human = true\n    else\n      @major = $1.to_i\n      @minor = $2.to_i\n      @bug = $3.delete('.').to_i\n      @stage = CFBUNDLEVERSION_MAP.invert[$4.to_i]\n      @stageNum = $5.to_i\n      @original_version_string_was_human = false\n    end\n  end\n  def human_version\n    result = \"#{@major}.#{@minor}\"\n    result += \".#{@bug}\" if @bug != 0\n    result += \"#{@stage}\"+\"#{@stageNum}\" if @stage != FINAL\n    result\n  end\n  alias to_s human_version\n  def cfbundle_version\n    result = sprintf('%02d%02d%02d%s.%02d',\n      @major.to_i,\n      @minor.to_i,\n      @bug.to_i,\n      CFBUNDLEVERSION_MAP[@stage],\n      @stageNum.to_i)\n    result.insert(5,'.') # Weird placement for the first decimal: it lands in the middle of the 2-digit bug number.\n  end\n  def other_version\n    @original_version_string_was_human ? cfbundle_version : human_version\n  end\nend\n\nif ENV['APPLICATION_VERSION']\n  lsVersionNumber = VersionNumber.new(ENV['APPLICATION_VERSION']).other_version\n  infoFilePath = ENV['BUILT_PRODUCTS_DIR']+'/'+ENV['WRAPPER_NAME']+'/Contents/Info.plist'\n  infoLineArray = IO.readlines(infoFilePath)\n  info = infoLineArray.join(\"\")\n  newInfo = info.sub(/([\\t ]+<key>CFBundleVersion<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/, '\\1' + lsVersionNumber + '\\2')\n  infoFile = File.open(infoFilePath, 'w')\n  infoFile.puts(newInfo)\n  infoFile.close\nelse\n  puts 'Must be run from Xcode'\nend\n";
+			shellScript = "#! /usr/bin/ruby\n# \n# human_version_to_cfbundle_version.rb 1.0d1 (or 01000.00.01 ;-)\n#   Based on <http://www.dribin.org/dave/blog/archives/2006/08/02/versioning_os_x_apps/>\n#   Copyright (c) 2006 Jonathan 'Wolf' Rentzsch.\n#   Some rights reserved: <http://creativecommons.org/licenses/by/2.0/>\n#   Changes by Henning Kiel to make it work inside XCode Shell Phases by looking for an APPLICATION_VERSION variable, and\n#     replacing the computed value into the CFBundleVersion.\n#\n# A tool that generates CFVersionNumber+Launch Services-happy version numbers given a human version number.\n# For example, 1.2.3b4 => becomes 01020.32.04.\n# All information is encoded -- no information is lost. It's thus reversible, which this tool also does.\n\nputs 'Set LS Version'\n\nclass VersionNumber\n  DEVELOPMENT = 'd'\n  ALPHA = 'a'\n  BETA = 'b'\n  FINAL_CANDIDATE = 'fc'\n  FINAL = ''\n  CFBUNDLEVERSION_MAP = {DEVELOPMENT=>0,ALPHA=>1,BETA=>2,FINAL_CANDIDATE=>3,FINAL=>9}\n  def initialize(version_string)\n    # First try to match CFBundleVersion's format ('01031.08.04').\n    m = version_string.strip.match(/^(\\d\\d)(\\d\\d)(\\d\\.\\d)([01239])\\.(\\d\\d)$/)\n    if m.nil?\n      # Nope, try human-style ('1.3.10b4').\n      # Man, where's RCR 237 (Named capture) when I need it?\n      m = version_string.gsub(/\\s/,'').match(/^(\\d{1,2})(\\.(\\d{1,2}))?(\\.(\\d{1,2}))?((d|a|b|fc)(\\d{1,2}))?$/)\n      raise ArgumentError, \"can't parse '#{version_string}'\" if m.nil?\n      @major = $1.to_i\n      @minor = $3.to_i\n      @bug = $5.to_i\n      if $7.nil?\n        @stage = FINAL\n        @stageNum = 0\n      else\n        @stage = $7 # Kept as a string.\n        @stageNum = $8.to_i\n      end\n      @original_version_string_was_human = true\n    else\n      @major = $1.to_i\n      @minor = $2.to_i\n      @bug = $3.delete('.').to_i\n      @stage = CFBUNDLEVERSION_MAP.invert[$4.to_i]\n      @stageNum = $5.to_i\n      @original_version_string_was_human = false\n    end\n  end\n  def human_version\n    result = \"#{@major}.#{@minor}\"\n    result += \".#{@bug}\" if @bug != 0\n    result += \"#{@stage}\"+\"#{@stageNum}\" if @stage != FINAL\n    result\n  end\n  alias to_s human_version\n  def cfbundle_version\n    result = sprintf('%02d%02d%02d%s.%02d',\n      @major.to_i,\n      @minor.to_i,\n      @bug.to_i,\n      CFBUNDLEVERSION_MAP[@stage],\n      @stageNum.to_i)\n    result.insert(5,'.') # Weird placement for the first decimal: it lands in the middle of the 2-digit bug number.\n  end\n  def other_version\n    @original_version_string_was_human ? cfbundle_version : human_version\n  end\nend\n\nif ENV['APPLICATION_VERSION']\n  lsVersionNumber = VersionNumber.new(ENV['APPLICATION_VERSION']).other_version\n  infoFilePath = ENV['BUILT_PRODUCTS_DIR']+'/'+ENV['WRAPPER_NAME']+'/Contents/Info.plist'\n  infoLineArray = IO.readlines(infoFilePath)\n  info = infoLineArray.join(\"\")\n  newInfo = info.sub(/([\\t ]+<key>CFBundleVersion<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/, '\\1' + lsVersionNumber + '\\2')\n  infoFile = File.open(infoFilePath, 'w')\n  infoFile.puts(newInfo)\n  infoFile.close\nelse\n  puts 'Must be run from Xcode'\nend\n";
 		};
 		D4AA13600B812D3F00558C3A /* Remove Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -440,7 +444,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
-			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n        \nuse strict;\n        \ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `$ENV{SUBVERSION_INSTALL_DIR}/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n\nprint \"Set SVN revision\";\n\nuse strict;\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `$ENV{SUBVERSION_INSTALL_DIR}/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
 		};
 		D4E281530B8D06690095A792 /* Make Disk Image */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -497,6 +501,14 @@
 				089C167EFE841241C02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D4391C3A0BAAD9A600C12ED9 /* AboutDialog.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4391C3B0BAAD9A600C12ED9 /* English */,
+			);
+			name = AboutDialog.nib;
 			sourceTree = "<group>";
 		};
 		D4E84DDF0BA8BAAE000FE317 /* Localizable.strings */ = {

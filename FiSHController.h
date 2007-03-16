@@ -26,6 +26,9 @@
 /// Central controller. Reacts to incoming and outgoing messages, and uses the other classes to encrypt/decrypt these.
 @interface FiSHController : NSObject <MVChatPlugin, FiSHKeyExchangerDelegate>
 {
+   IBOutlet NSWindow *aboutWindow_;
+   IBOutlet NSTextField *aboutVersionField_;
+   
    FiSHKeyExchanger *keyExchanger_;
    FiSHBlowfish *blowFisher_;
    
@@ -33,4 +36,6 @@
    
    NSMutableDictionary *urlToConnectionCache_;
 }
+
+- (IBAction) showAboutWindow:(id)sender;
 @end

@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {showAboutWindow = id; }; 
+            CLASS = FiSHController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"aboutVersionField_" = NSTextField; "aboutWindow_" = NSWindow; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

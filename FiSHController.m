@@ -51,6 +51,8 @@ NSString *FiSHPreferEncCommand = @"enableEnc";
 NSString *FiSHAvoidEncCommand = @"disableEnc";
 // Command to override encryption for a single message
 NSString *FiSHOverrideEncCommand = @"+p";
+// Command to print out FiSHys version.
+NSString *FiSHAboutFiSHyCommand = @"aboutfishy";
 
 
 
@@ -66,6 +68,13 @@ NSString *FiSHOverrideEncCommand = @"+p";
    if (self = [super init])
    {
       DLog(@"Loading FiSHy.");
+      
+      // Prepare the About Window to use the version as specified in the main bundle
+      NSBundle *fishyBundle = [NSBundle bundleForClass:[self class]];
+      NSNib *aboutNib = [[[NSNib alloc] initWithNibNamed:@"AboutDialog" bundle:fishyBundle] autorelease];
+      [aboutNib instantiateNibWithOwner:self topLevelObjects:nil];
+      NSString *aboutVersion = [fishyBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+      [aboutVersionField_ setStringValue:[NSString stringWithFormat:[aboutVersionField_ stringValue], aboutVersion]];
 
       keyExchanger_ = [[FiSHKeyExchanger alloc] initWithDelegate:self];
       urlToConnectionCache_ = [[NSMutableDictionary alloc] init];
@@ -95,7 +104,16 @@ NSString *FiSHOverrideEncCommand = @"+p";
 }
 
 
+#pragma mark Action methods
+
+- (IBAction) showAboutWindow:(id)sender;
+{
+   [aboutWindow_ orderFront:sender];
+}
+
+
 #pragma mark FiSHKeyExchangerDelegate
+
 - (void)sendPrivateMessage:(NSString *)message to:(NSString *)receiver on:(id)connectionURL;
 {
    MVChatConnection *theConnection = [urlToConnectionCache_ objectForKey:connectionURL];
@@ -525,6 +543,11 @@ bail:
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefPreferEncrypted];
    if ([command isCaseInsensitiveEqualToString:FiSHAvoidEncCommand])
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefAvoidEncrypted];
+   if ([command isCaseInsensitiveEqualToString:FiSHAboutFiSHyCommand])
+   {
+      [self showAboutWindow:aView];
+      return YES;
+   }
    
    return NO;
 }
