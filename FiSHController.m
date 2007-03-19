@@ -22,7 +22,9 @@
 #import "Controllers/JVChatController.h"
 #import "Panels/JVChatRoomPanel.h"
 #import "Panels/JVDirectChatPanel.h"
+#import "Panels/JVChatRoomPanel.h"
 #import "Chat Core/MVChatUser.h"
+#import "Chat Core/MVChatRoom.h"
 #import "Chat Core/MVChatConnection.h"
 #import "Additions/NSStringAdditions.h"
 #import "Models/JVChatTranscript.h"
@@ -53,7 +55,8 @@ NSString *FiSHAvoidEncCommand = @"disableEnc";
 NSString *FiSHOverrideEncCommand = @"+p";
 // Command to print out FiSHys version.
 NSString *FiSHAboutFiSHyCommand = @"aboutfishy";
-
+// Command to set an encrypted topic.
+NSString *FiSHSetEncryptedTopicCommand = @"encTopic";
 
 
 @interface FiSHController (FiSHyPrivate)
@@ -62,7 +65,9 @@ NSString *FiSHAboutFiSHyCommand = @"aboutfishy";
 
 
 @implementation FiSHController
+
 #pragma mark MVChatPlugin
+
 - (id)initWithManager:(MVChatPluginManager *) manager;
 {
    if (self = [super init])
@@ -82,7 +87,7 @@ NSString *FiSHAboutFiSHyCommand = @"aboutfishy";
       
       encPrefs_ = [[FiSHEncryptionPrefs alloc] init];
       
-      // Add encryption setting notices to rooms and queries already open when we were loaded.
+      // Add encryption setting notices to rooms and queries already open when we were loaded, and try to decrypt topics.
       NSSet *openChatPanels = [[NSClassFromString(@"JVChatController") defaultController] chatViewControllersKindOfClass:NSClassFromString(@"JVDirectChatPanel")];
       NSEnumerator *chatPanelsEnum = [openChatPanels objectEnumerator];
       JVDirectChatPanel *aChatPanel = nil;
@@ -141,6 +146,7 @@ NSString *FiSHAboutFiSHyCommand = @"aboutfishy";
       [encPrefs_ setTemporaryPreference:FiSHEncPrefPreferEncrypted forService:nil account:nickname];
    }
 }
+
 
 #pragma mark MVIRCChatConnectionPlugin
 
@@ -268,6 +274,44 @@ bail:
    return;
 }
 
+- (void) processTopicAsData:(NSMutableData *) topic inRoom:(MVChatRoom *) room author:(MVChatUser *) author;
+{
+   // We only support IRC connection.
+   if (!FiSHIsIRCConnection([room connection]))
+      return;
+   
+   
+   // Get the secret for the room and connection. If we don't have one, just display the topic without changes.
+   NSString *accountName = FiSHNameForChatObject(room);
+   NSString *secret = nil;
+   // TODO: Handle service/connection correctly.
+   secret = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:accountName];
+   if (!secret)
+      return;
+   
+   [room setAttribute:[NSNumber numberWithBool:NO] forKey:@"decryptedTopic"];   
+   
+   // Try to decrypt the raw encrypted topic.
+   NSData *decryptedTopicData = nil;
+   FiSHCypherResult decryptionResult = [blowFisher_ decodeData:topic intoData:&decryptedTopicData key:secret];
+   switch (decryptionResult)
+   {
+      case FiSHCypherTextCut:
+      case FiSHCypherSuccess:
+         [topic setData:decryptedTopicData];
+         [room setAttribute:[NSNumber numberWithBool:YES] forKey:@"decryptedTopic"];
+      case FiSHCypherBadCharacters:
+      case FiSHCypherUnknownError:
+      case FiSHCypherPlainText:
+         [room setAttribute:[NSNumber numberWithInt:decryptionResult] forKey:@"FiSHyResult"];
+         break;
+      default:
+         DLog(@"Unexpected/unknown blowfish result.");
+         break;
+   }   
+}
+
+
 #pragma mark MVChatPluginDirectChatSupport
 
 /// Called whenever a message gets added to a chat panel.
@@ -362,17 +406,43 @@ bail:
    }
 }
 
+- (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) roomPanel by:(JVChatRoomMember *) member;
+{
+   // We only support IRC connection.
+   if (!FiSHIsIRCConnection([[roomPanel target] connection]))
+      return;
+   
+
+   MVChatRoom *room = [roomPanel target];
+   if ([[room attributeForKey:@"decryptedTopic"] boolValue])
+   {
+      DLog(@"Showing decrypted topic");
+   }
+}
+
 
 #pragma mark MVChatPluginRoomSupport
 
-- (void) joinedRoom:(JVChatRoomPanel *) room;
+- (void) joinedRoom:(JVChatRoomPanel *) roomPanel;
 {
    // We only support IRC connection.
-   if (!FiSHIsIRCConnection([[room target] connection]))
+   if (!FiSHIsIRCConnection([[roomPanel target] connection]))
       return;
    
    
-   [self joinedDirectChat:room];
+   [self joinedDirectChat:roomPanel];
+   
+   // Try to encrypt the topic. We have to do this here, as processTopicAsData::: isn't called for joined rooms.
+   MVChatRoom *room = [roomPanel target];
+   NSData *oldTopic = [room topic];
+   NSMutableData *mutableTopic = [oldTopic mutableCopy];
+   [self processTopicAsData:mutableTopic inRoom:room author:[room topicAuthor]];
+   // Use the private _setTopic here, so we don't change topic-author or date. Use performSelector: so the compiler doesn't complain about unknown methods.
+   [room performSelector:@selector(_setTopic:) withObject:mutableTopic];
+   if ([[room attributeForKey:@"decryptedTopic"] boolValue])
+   {
+      DLog(@"Showing decrypted topic");
+   }
 }
 
 
@@ -515,6 +585,65 @@ bail:
    return YES;
 }
 
+/// User command to set an encrypted topic.
+/**
+view can be nil, if this command was not typed in a direct chat panel.
+ */
+- (BOOL)processSetEncryptedTopicCommandWithArguments:(NSAttributedString *)arguments toConnection:(MVChatConnection *)connection inDirectChatPanel:(JVDirectChatPanel *)view;
+{
+   NSArray *argumentList = [[arguments string] FiSH_arguments];
+   MVChatRoom *room = nil;
+   NSString *newTopic = nil;
+   // If two arguments, proceed. If one, try to deduce target by current view's target. If anything else, abort.
+   if (!argumentList || [argumentList count] <= 0 || [argumentList count] > 2)
+   {
+      DLog(@"encTopic expects exactly 2 arguments, aborting.");
+      return YES;
+   } else if ([argumentList count] == 1)
+   {
+      // If only one argument has been given, use that as the new topic, and try to deduce the room from the current view.
+      room = [view target];
+      if (!room || ![room isKindOfClass:NSClassFromString(@"MVChatRoom")])
+      {
+         DLog(@"encTopic expects exactly 2 arguments, aborting.");
+         return YES;
+      }
+      newTopic = [argumentList objectAtIndex:0];
+   } else if ([argumentList count] == 2)
+   {
+      room = [connection joinedChatRoomWithName:[argumentList objectAtIndex:0]];
+      if (!room)
+      {
+         DLog(@"encTopic invoked for unknown room. You have to be in a room to set an encrypted topic.");
+         return YES;
+      }
+      newTopic = [argumentList objectAtIndex:1];
+   }
+   
+   // Get the key for the room.
+   // Check if we have a secret for the current room/nick.
+   // TODO: Handle service/connection correctly.
+   NSString *theKey = [[FiSHSecretStore sharedSecretStore] secretForService:nil account:FiSHNameForChatObject(room)];
+   if (!theKey)
+   {
+      NSString *errorMessage = NSLocalizedString(@"Trying to set a topic for a room without a key. The topic was not set.", @"Trying to set a topic for a room without a key. The topic was not set.");
+      DLog(errorMessage);
+      [view addEventMessageToDisplay:errorMessage withName:@"FiSHy" andAttributes:nil];
+      
+      return YES;
+   }
+   
+   // Everything's fine, encrypt the topic.
+   NSData *newTopicData = nil;
+   [blowFisher_ encodeData:[newTopic dataUsingEncoding:[room encoding]] intoData:&newTopicData key:theKey];
+   newTopic = [[[NSString alloc] initWithData:newTopicData encoding:NSASCIIStringEncoding] autorelease];
+   
+   [room setTopic:[[[NSAttributedString alloc] initWithString:newTopic] autorelease]];
+   
+   return YES;
+}
+
+
 #pragma mark MVChatPluginCommandSupport
 
 /// Process user commands.
@@ -543,6 +672,8 @@ bail:
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefPreferEncrypted];
    if ([command isCaseInsensitiveEqualToString:FiSHAvoidEncCommand])
       return [self processEncryptionPreferenceCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view pref:FiSHEncPrefAvoidEncrypted];
+   if ([command isCaseInsensitiveEqualToString:FiSHSetEncryptedTopicCommand])
+      return [self processSetEncryptedTopicCommandWithArguments:arguments toConnection:connection inDirectChatPanel:view];
    if ([command isCaseInsensitiveEqualToString:FiSHAboutFiSHyCommand])
    {
       [self showAboutWindow:aView];

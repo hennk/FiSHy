@@ -53,6 +53,8 @@ To install, delete any prior versions of FiSHy, then simply drag the FiSHy plugi
 /setkey [<channel/nickname>] <key>				Sets the encryption key\
 /keyx [<nickname>]							Initiates a key-exchange\
 /+p <message>								Sends message unencrypted\
+/encTopic [<channel>] <topic>					Sets an encrypted topic\
+/aboutFiSHy									Shows license and version\
 \
 \
 
@@ -84,6 +86,12 @@ If a user changes its nickname, you will have to exchange keys again, as FiSHy c
 \
 To force sending a message unencrypted to a room/nickname for which encryption is enabled, use the /+p command. This command will send everything written after it in clear-text.\
 	/+p <message to be sent unencrypted>\
+\
+To set an encrypted topic, use the /encTopic command.\
+	/encTopic [<channel>] <topic>\
+If no channel has been supplied, it tries to deduce it from the currently shown channel. If no key has been set for the channel, this command will do nothing. Currently FiSHy does not provide visual feedback for encrypted topics.\
+\
+To see a small window containing the version and license of FiSHy, use the /aboutFiSHy command.\
 \
 \
 
