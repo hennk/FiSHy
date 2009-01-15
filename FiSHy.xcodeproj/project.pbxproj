@@ -413,7 +413,6 @@
 			);
 			name = "Set LS Version";
 			outputPaths = (
-				$BUILT_PRODUCTS_DIR/$WRAPPER_NAME/Contents/Info.plist,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /usr/bin/ruby;
@@ -442,7 +441,6 @@
 			);
 			name = "Set git commit hash";
 			outputPaths = (
-				$BUILT_PRODUCTS_DIR/$WRAPPER_NAME/Contents/Info.plist,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
