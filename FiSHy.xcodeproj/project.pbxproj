@@ -309,7 +309,7 @@
 				8D5B49B3048680CD000E48DA /* Frameworks */,
 				D4AA134C0B812B8D00558C3A /* Set LS Version */,
 				D4AA13600B812D3F00558C3A /* Remove Headers */,
-				D4AA13620B812D7D00558C3A /* Set SVN Revision */,
+				D4AA13620B812D7D00558C3A /* Set git commit hash */,
 				D4E281530B8D06690095A792 /* Make Disk Image */,
 			);
 			buildRules = (
@@ -433,20 +433,20 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\necho \"Remove Headers\"\n### We only run on \"Release\" builds...\nif [[ $BUILD_STYLE != 'Release (Universal)' ]] ; then\n\texit 0\nfi\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -path '*/Headers/*' -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type d -delete\n\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type l -delete";
 		};
-		D4AA13620B812D7D00558C3A /* Set SVN Revision */ = {
+		D4AA13620B812D7D00558C3A /* Set git commit hash */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Set SVN Revision";
+			name = "Set git commit hash";
 			outputPaths = (
 				$BUILT_PRODUCTS_DIR/$WRAPPER_NAME/Contents/Info.plist,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
-			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n\nprint \"Set SVN revision\";\n\nuse strict;\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `$ENV{SUBVERSION_INSTALL_DIR}/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+			shellScript = "# Xcode auto-versioning script for Subversion by Axel Andersson\n# Updated for git by Marcus S. Zarra and Matt Long\n \nuse strict;\n \nmy $REV = `$ENV{SUBVERSION_INSTALL_DIR}/git show --abbrev-commit | grep \"^commit\"`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n \nmy $version = $REV;\nif( $version =~ /^commit\\s+([^.]+)\\.\\.\\.$/ )\n{ \n\t$version = $1;\n}\nelse\n{\n\t$version = undef;\n}\ndie \"$0: No Git revision found\" unless $version;\n \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n \n$info =~ s/([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$ENV{\"APPLICATION_VERSION\"} ($version)$2/;\n \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);";
 		};
 		D4E281530B8D06690095A792 /* Make Disk Image */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -462,7 +462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Make Disk Image\"\nif [[ $BUILD_STYLE != \"Release (Universal)\" ]]; then\n\texit\nfi\n$PROJECT_DIR/buildDMG.pl -dmgName \"$PRODUCT_NAME-$APPLICATION_VERSION\".0 \\\n                         -buildDir \"$HOME/Desktop\" \\\n                         -volName \"$PRODUCT_NAME\" \\\n                         -compressionLevel 9 \\\n                         \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \\\n                         \"$PROJECT_DIR/READ ME.rtf\" \\\n                         \"$PROJECT_DIR/LICENSE.txt\" \\\n                         \"$PROJECT_DIR/CHANGELOG.txt\"";
+			shellScript = "echo \"Make Disk Image\"\nif [[ $BUILD_STYLE != \"Release\" ]]; then\n\texit\nfi\n$PROJECT_DIR/buildDMG.pl -dmgName \"$PRODUCT_NAME-$APPLICATION_VERSION\".0 \\\n                         -buildDir \"$HOME/Desktop\" \\\n                         -volName \"$PRODUCT_NAME\" \\\n                         -compressionLevel 9 \\\n                         \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \\\n                         \"$PROJECT_DIR/READ ME.rtf\" \\\n                         \"$PROJECT_DIR/LICENSE.txt\" \\\n                         \"$PROJECT_DIR/CHANGELOG.txt\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -605,7 +605,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SUBVERSION_INSTALL_DIR = /usr/bin;
+				SUBVERSION_INSTALL_DIR = /sw/bin;
 				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
 			};
 			name = Development;
@@ -613,7 +613,7 @@
 		1DEB914008733D840010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_VERSION = 0.3.0;
+				APPLICATION_VERSION = 0.4.0;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
