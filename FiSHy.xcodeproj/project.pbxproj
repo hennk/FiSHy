@@ -329,6 +329,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "FiSHy" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FiSHy */;
 			projectDirPath = "";
@@ -342,6 +343,7 @@
 					ProjectRef = D45D04090B7E3D7B001DF87B /* Colloquy.xcodeproj */;
 				},
 			);
+			projectRoot = "";
 			targets = (
 				8D5B49AC048680CD000E48DA /* FiSHy */,
 			);
@@ -591,7 +593,7 @@
 		1DEB913F08733D840010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_VERSION = 0.3.0;
+				APPLICATION_VERSION = 0.4.0;
 				COLLOQUY_SOURCE_FOLDER = ../colloquy;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -603,7 +605,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SUBVERSION_INSTALL_DIR = /sw/bin;
+				SUBVERSION_INSTALL_DIR = /usr/bin;
 				SYMROOT = "${COLLOQUY_SOURCE_FOLDER}/build";
 			};
 			name = Development;

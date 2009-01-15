@@ -1,3 +1,4 @@
+0.4.0
 - Added support for decrypting encrypted topics. As of now no visible feedback exists, though.
 - Added /encTopic command to set an encrypted topic.
 - Added /aboutFiSHy command.
