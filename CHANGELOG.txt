@@ -1,3 +1,6 @@
+0.4.1a1     2009/09/20
+- First 64 Bit compilation, probably not working correctly.
+
 0.4.0       2009/01/15
 - Added support for decrypting encrypted topics. As of now no visible feedback exists, though.
 - Added /encTopic command to set an encrypted topic.
